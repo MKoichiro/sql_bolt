@@ -2,7 +2,7 @@
 
 -- Run following to apply:
 -- 1. From psql interactive shell
---    \i ~/dataset/sqlbolt/north_american_cities.sql
+--    \i /home/postgres/datasetsqlbolt/north_american_cities.sql
 -- 2. From bash shell
 --    psql -U postgres -f ~/dataset/sqlbolt/north_american_cities.sql
 

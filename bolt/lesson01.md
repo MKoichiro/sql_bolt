@@ -32,7 +32,7 @@ VALUES
 ```
 
 ```psql
-  \i ~/dataset/sqlbolt/movies.sql
+  \i /home/postgres/dataset/sqlbolt/movies.sql
 ```
 
 ## 本文

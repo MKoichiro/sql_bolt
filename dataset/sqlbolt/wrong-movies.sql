@@ -2,7 +2,7 @@
 
 -- Run following to apply:
 -- * From psql interactive shell
---    \i ~/dataset/sqlbolt/wrong-movies.sql
+--    \i /home/postgres/datasetsqlbolt/wrong-movies.sql
 -- * From bash shell
 --    psql -U postgres -f ~/dataset/sqlbolt/wrong-movies.sql
 

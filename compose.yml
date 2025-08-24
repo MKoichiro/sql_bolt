@@ -6,11 +6,11 @@ services:
     container_name: sql-practice
     environment:
       POSTGRES_PASSWORD: mypassword
-      POSTGRES_USER: postgres
+      POSTGRES_USER: postgres # 管理者(superuser)名の指定の環境変数(psqlの仕様)
     ports:
       - "5432:5432"
     volumes:
-      - db-data:/var/lib/postgresql/data
+      - db-data:/var/lib/postgresql/data # postgreSQLで、データベースのデータそのものの保管場所の慣習
       - ./dataset/:/home/postgres/dataset
 
 volumes:
