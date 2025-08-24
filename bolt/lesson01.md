@@ -1,53 +1,59 @@
 # [SQL Lesson 1: SELECT queries 101](https://sqlbolt.com/lesson/select_queries_introduction)
 
-課題の表を再現するschema兼seedクエリ:
+<details>
+  <summary>課題の表を再現するschema兼seedクエリ:</summary>
 
-```SQL
-DROP TABLE IF EXISTS movies;
+  ```SQL
+  DROP TABLE IF EXISTS movies;
 
-CREATE TABLE IF NOT EXISTS movies (
-  id              INTEGER         PRIMARY KEY,
-  title           VARCHAR(255)    NOT NULL,
-  director        VARCHAR(255)    NOT NULL,
-  year            INTEGER         NOT NULL,
-  length_minutes  INTEGER         NOT NULL
-);
+  CREATE TABLE IF NOT EXISTS movies (
+    id              INTEGER         PRIMARY KEY,
+    title           VARCHAR(255)    NOT NULL,
+    director        VARCHAR(255)    NOT NULL,
+    year            INTEGER         NOT NULL,
+    length_minutes  INTEGER         NOT NULL
+  );
 
-INSERT INTO movies (id, title, director, year, length_minutes)
-VALUES
-(1,  'Toy Story',           'John Lasseter',  1995, 81),
-(2,  'A Bug''s Life',       'John Lasseter',  1998, 95),
-(3,  'Toy Story 2',         'John Lasseter',  1999, 93),
-(4,  'Monsters, Inc.',      'Pete Docter',    2001, 92),
-(5,  'Finding Nemo',        'Andrew Stanton', 2003, 107),
-(6,  'The Incredibles',     'Brad Bird',      2004, 116),
-(7,  'Cars',                'John Lasseter',  2006, 117),
-(8,  'Ratatouille',         'Brad Bird',      2007, 115),
-(9,  'WALL-E',              'Andrew Stanton', 2008, 104),
-(10, 'Up',                  'Pete Docter',    2009, 101),
-(11, 'Toy Story 3',         'Lee Unkrich',    2010, 103),
-(12, 'Cars 2',              'John Lasseter',  2011, 120),
-(13, 'Brave',               'Brenda Chapman', 2012, 102),
-(14, 'Monsters University', 'Dan Scanlon',    2013, 110);
-```
+  INSERT INTO movies (id, title, director, year, length_minutes)
+  VALUES
+  (1,  'Toy Story',           'John Lasseter',  1995, 81),
+  (2,  'A Bug''s Life',       'John Lasseter',  1998, 95),
+  (3,  'Toy Story 2',         'John Lasseter',  1999, 93),
+  (4,  'Monsters, Inc.',      'Pete Docter',    2001, 92),
+  (5,  'Finding Nemo',        'Andrew Stanton', 2003, 107),
+  (6,  'The Incredibles',     'Brad Bird',      2004, 116),
+  (7,  'Cars',                'John Lasseter',  2006, 117),
+  (8,  'Ratatouille',         'Brad Bird',      2007, 115),
+  (9,  'WALL-E',              'Andrew Stanton', 2008, 104),
+  (10, 'Up',                  'Pete Docter',    2009, 101),
+  (11, 'Toy Story 3',         'Lee Unkrich',    2010, 103),
+  (12, 'Cars 2',              'John Lasseter',  2011, 120),
+  (13, 'Brave',               'Brenda Chapman', 2012, 102),
+  (14, 'Monsters University', 'Dan Scanlon',    2013, 110);
+  ```
 
-```psql
-  \i /home/postgres/dataset/sqlbolt/movies.sql
-```
+  ```psql
+    \i /home/postgres/dataset/sqlbolt/movies.sql
+  ```
+</details>
 
-## 本文
+## 訳文
 
-SQLデータベースからデータを取り出すには、`SELECT`文を書く必要があります。
-クエリ自体は、どのようなデータを探しているのか、データベースのどこにあるのか、
-そしてオプションとして、データを返す前にどのように変換するのかを宣言する文に過ぎません。
-しかし、クエリには特有の構文があり、それを以下のレッスンで学んで行きます。
+SQLデータベースからデータを取り出すには、`SELECT`文を使います。
+①どのようなデータを探しているのか、
+②データベースのどこにあるのか、
+またオプションとして、
+③データを返す前にどのように変換するのか、
+クエリ自体はこれらを宣言しているに過ぎません。
+しかし、クエリには特有の構文があるので、それらを以下のレッスンで学んで行きます。
 
-冒頭で述べたように、SQLのテーブルをエンティティの型（例：犬）、
-テーブルの各行をその型の特定のインスタンス（例：パグ、ビーグル、色違いのパグなど）と考えることができます。
-つまり、列はそのエンティティのすべてのインスタンスに共通するプロパティ（毛の色、尻尾の長さなど）を表します。
+イントロダクションで述べたように、SQLのテーブル＝エンティティ（例：犬）、
+テーブルの各行＝特定のインスタンス（例：パグ、ビーグル、色違いのパグなど）
+と考えることができます。
+よっておのずと列は、そのエンティティのすべてのインスタンスに共通するプロパティ（毛の色、尻尾の長さなど）を表すことになります。
 
 そして、データのテーブルが与えられた場合、最も基本的なクエリは、
-テーブルのすべての行（インスタンス）から、いくつかの列（プロパティ）を選択するものです。
+テーブルの**すべての行（インスタンス）から、いくつかの列（プロパティ）を選択する**ものです。
 
 特定のカラムを選択するクエリ:
 
@@ -55,11 +61,12 @@ SQLデータベースからデータを取り出すには、`SELECT`文を書く
   SELECT column, another_column, ... FROM mytable;
 ```
 
-このクエリの結果は、2次元の行と列のセットとなり、
+このクエリの結果は、2次元の行列となり、
 事実上テーブルのコピーとなりますが、要求した列のみが含まれます。
 
-テーブルから完全にすべての列のデータを取得したい場合は、
-すべての列名を列挙する代わりに、アスタリスク (`*`) の省略記法を使用することができます。
+テーブル全体のデータを取得したい場合は、
+すべての列名を列挙する代わりに、
+アスタリスク (`*`) の省略記法が使用できます。
 
 全カラムの選択クエリ:
 
@@ -67,7 +74,7 @@ SQLデータベースからデータを取り出すには、`SELECT`文を書く
   SELECT * FROM mytable;
 ```
 
-このようなクエリはテーブル全体をガバっと取得できるので便利です。
+テーブル全体をガバっと取得するのに便利です。
 
 ## 練習問題
 
@@ -141,3 +148,109 @@ We will be using a database with data about some of Pixar's classic movies for m
 | 12  | Cars 2              | John Lasseter  | 2011 | 120            |
 | 13  | Brave               | Brenda Chapman | 2012 | 102            |
 | 14  | Monsters University | Dan Scanlon    | 2013 | 110            |
+
+1. Find the title of each film
+2. Find the director of each film
+3. Find the title and director of each film
+4. Find the title and year of each film
+5. Find all the information about each film
+
+## 解答例
+```psql
+postgres=# SELECT title FROM movies;
+        title        
+---------------------
+ Toy Story
+ A Bug's Life
+ Toy Story 2
+ Monsters, Inc.
+ Finding Nemo
+ The Incredibles
+ Cars
+ Ratatouille
+ WALL-E
+ Up
+ Toy Story 3
+ Cars 2
+ Brave
+ Monsters University
+(14 rows)
+
+postgres=# SELECT director FROM movies;
+    director    
+----------------
+ John Lasseter
+ John Lasseter
+ John Lasseter
+ Pete Docter
+ Andrew Stanton
+ Brad Bird
+ John Lasseter
+ Brad Bird
+ Andrew Stanton
+ Pete Docter
+ Lee Unkrich
+ John Lasseter
+ Brenda Chapman
+ Dan Scanlon
+(14 rows)
+
+postgres=# SELECT title, director FROM movies;
+        title        |    director    
+---------------------+----------------
+ Toy Story           | John Lasseter
+ A Bug's Life        | John Lasseter
+ Toy Story 2         | John Lasseter
+ Monsters, Inc.      | Pete Docter
+ Finding Nemo        | Andrew Stanton
+ The Incredibles     | Brad Bird
+ Cars                | John Lasseter
+ Ratatouille         | Brad Bird
+ WALL-E              | Andrew Stanton
+ Up                  | Pete Docter
+ Toy Story 3         | Lee Unkrich
+ Cars 2              | John Lasseter
+ Brave               | Brenda Chapman
+ Monsters University | Dan Scanlon
+(14 rows)
+
+postgres=# SELECT title, year FROM movies;
+        title        | year 
+---------------------+------
+ Toy Story           | 1995
+ A Bug's Life        | 1998
+ Toy Story 2         | 1999
+ Monsters, Inc.      | 2001
+ Finding Nemo        | 2003
+ The Incredibles     | 2004
+ Cars                | 2006
+ Ratatouille         | 2007
+ WALL-E              | 2008
+ Up                  | 2009
+ Toy Story 3         | 2010
+ Cars 2              | 2011
+ Brave               | 2012
+ Monsters University | 2013
+(14 rows)
+
+postgres=# SELECT * FROM movies;
+ id |        title        |    director    | year | length_minutes 
+----+---------------------+----------------+------+----------------
+  1 | Toy Story           | John Lasseter  | 1995 |             81
+  2 | A Bug's Life        | John Lasseter  | 1998 |             95
+  3 | Toy Story 2         | John Lasseter  | 1999 |             93
+  4 | Monsters, Inc.      | Pete Docter    | 2001 |             92
+  5 | Finding Nemo        | Andrew Stanton | 2003 |            107
+  6 | The Incredibles     | Brad Bird      | 2004 |            116
+  7 | Cars                | John Lasseter  | 2006 |            117
+  8 | Ratatouille         | Brad Bird      | 2007 |            115
+  9 | WALL-E              | Andrew Stanton | 2008 |            104
+ 10 | Up                  | Pete Docter    | 2009 |            101
+ 11 | Toy Story 3         | Lee Unkrich    | 2010 |            103
+ 12 | Cars 2              | John Lasseter  | 2011 |            120
+ 13 | Brave               | Brenda Chapman | 2012 |            102
+ 14 | Monsters University | Dan Scanlon    | 2013 |            110
+(14 rows)
+
+postgres=# 
+```
