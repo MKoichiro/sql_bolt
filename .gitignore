@@ -1,0 +1,4 @@
+/personal/
+/.vscode/
+/bolt/*
+!/bolt/lesson01.md

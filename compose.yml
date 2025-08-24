@@ -1,0 +1,18 @@
+services:
+  db:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: sql-practice
+    environment:
+      POSTGRES_PASSWORD: mypassword
+      POSTGRES_USER: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - db-data:/var/lib/postgresql/data
+      - ./dataset/:/home/postgres/dataset
+
+volumes:
+  db-data:
+    name: practice-db-data
