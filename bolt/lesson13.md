@@ -1,46 +1,50 @@
 # [SQL Lesson 13: Inserting rows](https://sqlbolt.com/lesson/inserting_rows)
 
-課題の表を再現するschema兼seedクエリ:
+<details>
+  <summary>課題の表を再現するseedコマンド:</summary>
 
-```SQL
-DROP TABLE IF EXISTS movies;
+  ```SQL
+  DROP TABLE IF EXISTS movies;
 
-CREATE TABLE IF NOT EXISTS movies (
-  id              INTEGER         PRIMARY KEY,
-  title           VARCHAR(255)    NOT NULL,
-  director        VARCHAR(255)    NOT NULL,
-  year            INTEGER         NOT NULL,
-  length_minutes  INTEGER         NOT NULL
-);
+  CREATE TABLE IF NOT EXISTS movies (
+    id              INTEGER         PRIMARY KEY,
+    title           VARCHAR(255)    NOT NULL,
+    director        VARCHAR(255)    NOT NULL,
+    year            INTEGER         NOT NULL,
+    length_minutes  INTEGER         NOT NULL
+  );
 
-INSERT INTO movies (id, title, director, year, length_minutes)
-VALUES
-(1,  'Toy Story',           'John Lasseter',  1995, 81),
-(2,  'A Bug''s Life',       'John Lasseter',  1998, 95),
-(3,  'Toy Story 2',         'John Lasseter',  1999, 93);
+  INSERT INTO movies (id, title, director, year, length_minutes)
+  VALUES
+  (1,  'Toy Story',           'John Lasseter',  1995, 81),
+  (2,  'A Bug''s Life',       'John Lasseter',  1998, 95),
+  (3,  'Toy Story 2',         'John Lasseter',  1999, 93);
 
-CREATE TABLE boxoffice (
-  movie_id            INTEGER      PRIMARY KEY,
-  rating              NUMERIC(3,1) NOT NULL,
-  domestic_sales      INTEGER      NOT NULL,
-  international_sales INTEGER      NOT NULL,
-  CONSTRAINT fk_movie
-    FOREIGN KEY (movie_id)
-    REFERENCES movies(id)
-);
+  CREATE TABLE boxoffice (
+    movie_id            INTEGER      PRIMARY KEY,
+    rating              NUMERIC(3,1) NOT NULL,
+    domestic_sales      INTEGER      NOT NULL,
+    international_sales INTEGER      NOT NULL,
+    CONSTRAINT fk_movie
+      FOREIGN KEY (movie_id)
+      REFERENCES movies(id)
+  );
 
-INSERT INTO boxoffice (movie_id, rating, domestic_sales, international_sales)
-VALUES
-(3,  7.9, 245852179, 239163000),
-(1,  8.3, 191796233, 170162503),
-(2,  7.2, 162798565, 200600000);
-```
+  INSERT INTO boxoffice (movie_id, rating, domestic_sales, international_sales)
+  VALUES
+  (3,  7.9, 245852179, 239163000),
+  (1,  8.3, 191796233, 170162503),
+  (2,  7.2, 162798565, 200600000);
+  ```
 
-```psql
-  \i /home/postgres/dataset/sqlbolt/incomplete-movies-boxoffice.sql
-```
+  または以下を実行:
 
-## 本文
+  ```psql
+    \i /home/postgres/dataset/sqlbolt/incomplete-movies-boxoffice.sql
+  ```
+</details>
+
+## 訳文
 
 データベースのデータを照会する方法について、
 かなり多くのレッスンを費やしてきましたので、
@@ -120,85 +124,109 @@ SQLでは、各テーブルの構造と、テーブルの各カラムが含む�
 以下のレッスンではデータベースを変更するので、
 準備ができたら各クエリを手動で実行する必要があります。
 
+| id  | title               | director       | year | length_minutes |
+| --- | ------------------- | -------------- | ---- | -------------- |
+| 1   | Toy Story           | John Lasseter  | 1995 | 81             |
+| 2   | A Bug's Life        | John Lasseter  | 1998 | 95             |
+| 3   | Toy Story 2         | John Lasseter  | 1999 | 93             |
+
+| movie_id | rating | domestic_sales | international_sales |
+| -------- | ------ | -------------- | ------------------- |
+| 3        | 7.9    | 245852179      | 239163000           |
+| 1        | 8.3    | 191796233      | 170162503           |
+| 2        | 7.2    | 162798565      | 200600000           |
+
 1. Add the studio's new production, Toy Story 4 to the list of movies (you can use any director)
 2. Toy Story 4 has been released to critical acclaim! It had a rating of 8.7, and made 340 million domestically and 270 million internationally. Add the record to the BoxOffice table.
 
-| id  | title               | director       | year | length_minutes |
-| --- | ------------------- | -------------- | ---- | -------------- |
-| 1   | Toy Story           | John Lasseter  | 1995 | 81             |
-| 2   | A Bug's Life        | John Lasseter  | 1998 | 95             |
-| 3   | Toy Story 2         | John Lasseter  | 1999 | 93             |
+<details>
+  <summary>解答の期待値</summary>
 
-| movie_id | rating | domestic_sales | international_sales |
-| -------- | ------ | -------------- | ------------------- |
-| 3        | 7.9    | 245852179      | 239163000           |
-| 1        | 8.3    | 191796233      | 170162503           |
-| 2        | 7.2    | 162798565      | 200600000           |
+  1. 
+  2. 
+  ```psql
+  ```
+  ```psql
+  ```
+</details>
 
-## 原文
+<details>
+  <summary>解答例</summary>
 
-We've spent quite a few lessons on how to query for data in a database, so it's time to start learning a bit about SQL schemas and how to add new data.
+  1. 
+  2. 
+  ```psql
+  ```
+  ```psql
+  ```
+</details>
 
-## What is a Schema?
+<details>
+  <summary>原文</summary>
 
-We previously described a table in a database as a two-dimensional set of rows and columns, with the columns being the properties and the rows being instances of the entity in the table. In SQL, the *database schema* is what describes the structure of each table, and the datatypes that each column of the table can contain.
+  We've spent quite a few lessons on how to query for data in a database, so it's time to start learning a bit about SQL schemas and how to add new data.
 
-Example: Correlated subquery
+  ## What is a Schema?
 
-For example, in our **Movies** table, the values in the *Year* column must be an Integer, and the values in the *Title* column must be a String.
+  We previously described a table in a database as a two-dimensional set of rows and columns, with the columns being the properties and the rows being instances of the entity in the table. In SQL, the *database schema* is what describes the structure of each table, and the datatypes that each column of the table can contain.
 
-This fixed structure is what allows a database to be efficient, and consistent despite storing millions or even billions of rows.
+  Example: Correlated subquery
 
-## Inserting new data
+  For example, in our **Movies** table, the values in the *Year* column must be an Integer, and the values in the *Title* column must be a String.
 
-When inserting data into a database, we need to use an `INSERT` statement, which declares which table to write into, the columns of data that we are filling, and one or more rows of data to insert. In general, each row of data you insert should contain values for every corresponding column in the table. You can insert multiple rows at a time by just listing them sequentially.
+  This fixed structure is what allows a database to be efficient, and consistent despite storing millions or even billions of rows.
 
-Insert statement with values for all columns:
+  ## Inserting new data
 
-```SQL
-  INSERT INTO mytable
-  VALUES  (value_or_expr, another_value_or_expr, …),
-          (value_or_expr_2, another_value_or_expr_2, …),
-          …;
-```
+  When inserting data into a database, we need to use an `INSERT` statement, which declares which table to write into, the columns of data that we are filling, and one or more rows of data to insert. In general, each row of data you insert should contain values for every corresponding column in the table. You can insert multiple rows at a time by just listing them sequentially.
 
-In some cases, if you have incomplete data and the table contains columns that support default values, you can insert rows with only the columns of data you have by specifying them explicitly.
+  Insert statement with values for all columns:
 
-Insert statement with specific columns:
+  ```SQL
+    INSERT INTO mytable
+    VALUES  (value_or_expr, another_value_or_expr, …),
+            (value_or_expr_2, another_value_or_expr_2, …),
+            …;
+  ```
 
-```SQL
-  INSERT INTO mytable (column, another_column, …)
-  VALUES  (value_or_expr, another_value_or_expr, …),
-          (value_or_expr_2, another_value_or_expr_2, …),
-          …;
-```
+  In some cases, if you have incomplete data and the table contains columns that support default values, you can insert rows with only the columns of data you have by specifying them explicitly.
 
-In these cases, the number of values need to match the number of columns specified. Despite this being a more verbose statement to write, inserting values this way has the benefit of being forward compatible. For example, if you add a new column to the table with a default value, no hardcoded `INSERT` statements will have to change as a result to accommodate that change.
+  Insert statement with specific columns:
 
-In addition, you can use mathematical and string expressions with the values that you are inserting.  
-This can be useful to ensure that all data inserted is formatted a certain way.
+  ```SQL
+    INSERT INTO mytable (column, another_column, …)
+    VALUES  (value_or_expr, another_value_or_expr, …),
+            (value_or_expr_2, another_value_or_expr_2, …),
+            …;
+  ```
 
-Example Insert statement with expressions:
+  In these cases, the number of values need to match the number of columns specified. Despite this being a more verbose statement to write, inserting values this way has the benefit of being forward compatible. For example, if you add a new column to the table with a default value, no hardcoded `INSERT` statements will have to change as a result to accommodate that change.
 
-```SQL
-  INSERT INTO boxoffice (movie_id, rating, sales_in_millions)
-  VALUES (1, 9.9, 283742034 / 1000000);
-```
+  In addition, you can use mathematical and string expressions with the values that you are inserting.  
+  This can be useful to ensure that all data inserted is formatted a certain way.
 
-## Exercise
+  Example Insert statement with expressions:
 
-In this exercise, we are going to play studio executive and add a few movies to the **Movies** to our portfolio. In this table, the **Id** is an auto-incrementing integer, so you can try inserting a row with only the other columns defined.
+  ```SQL
+    INSERT INTO boxoffice (movie_id, rating, sales_in_millions)
+    VALUES (1, 9.9, 283742034 / 1000000);
+  ```
 
-Since the following lessons will modify the database, you'll have to manually run each query once they are ready to go.
+  ## Exercise
 
-| id  | title               | director       | year | length_minutes |
-| --- | ------------------- | -------------- | ---- | -------------- |
-| 1   | Toy Story           | John Lasseter  | 1995 | 81             |
-| 2   | A Bug's Life        | John Lasseter  | 1998 | 95             |
-| 3   | Toy Story 2         | John Lasseter  | 1999 | 93             |
+  In this exercise, we are going to play studio executive and add a few movies to the **Movies** to our portfolio. In this table, the **Id** is an auto-incrementing integer, so you can try inserting a row with only the other columns defined.
 
-| movie_id | rating | domestic_sales | international_sales |
-| -------- | ------ | -------------- | ------------------- |
-| 3        | 7.9    | 245852179      | 239163000           |
-| 1        | 8.3    | 191796233      | 170162503           |
-| 2        | 7.2    | 162798565      | 200600000           |
+  Since the following lessons will modify the database, you'll have to manually run each query once they are ready to go.
+
+  | id  | title               | director       | year | length_minutes |
+  | --- | ------------------- | -------------- | ---- | -------------- |
+  | 1   | Toy Story           | John Lasseter  | 1995 | 81             |
+  | 2   | A Bug's Life        | John Lasseter  | 1998 | 95             |
+  | 3   | Toy Story 2         | John Lasseter  | 1999 | 93             |
+
+  | movie_id | rating | domestic_sales | international_sales |
+  | -------- | ------ | -------------- | ------------------- |
+  | 3        | 7.9    | 245852179      | 239163000           |
+  | 1        | 8.3    | 191796233      | 170162503           |
+  | 2        | 7.2    | 162798565      | 200600000           |
+</details>

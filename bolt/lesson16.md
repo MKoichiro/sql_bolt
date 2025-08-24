@@ -1,10 +1,11 @@
 # [SQL Lesson 16: Creating tables](https://sqlbolt.com/lesson/creating_tables)
 
-## 本文
+## 訳文
 
 1. 
 
-## 原文
+<details>
+  <summary>原文</summary>
 
 When you have new entities and relationships to store in your database, you can create a new database table using the `CREATE TABLE` statement.
 

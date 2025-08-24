@@ -1,68 +1,72 @@
 # [SQL Lesson 6: Multi-table queries with JOINs](https://sqlbolt.com/lesson/select_queries_with_joins)
 
-課題の表を再現するschema兼seedクエリ:
+<details>
+  <summary>課題の表を再現するseedコマンド:</summary>
 
-```SQL
-DROP TABLE IF EXISTS movies;
+  ```SQL
+  DROP TABLE IF EXISTS movies;
 
-CREATE TABLE IF NOT EXISTS movies (
-  id              INTEGER         PRIMARY KEY,
-  title           VARCHAR(255)    NOT NULL,
-  director        VARCHAR(255)    NOT NULL,
-  year            INTEGER         NOT NULL,
-  length_minutes  INTEGER         NOT NULL
-);
+  CREATE TABLE IF NOT EXISTS movies (
+    id              INTEGER         PRIMARY KEY,
+    title           VARCHAR(255)    NOT NULL,
+    director        VARCHAR(255)    NOT NULL,
+    year            INTEGER         NOT NULL,
+    length_minutes  INTEGER         NOT NULL
+  );
 
-INSERT INTO movies (id, title, director, year, length_minutes)
-VALUES
-(1,  'Toy Story',           'John Lasseter',  1995, 81),
-(2,  'A Bug''s Life',       'John Lasseter',  1998, 95),
-(3,  'Toy Story 2',         'John Lasseter',  1999, 93),
-(4,  'Monsters, Inc.',      'Pete Docter',    2001, 92),
-(5,  'Finding Nemo',        'Andrew Stanton', 2003, 107),
-(6,  'The Incredibles',     'Brad Bird',      2004, 116),
-(7,  'Cars',                'John Lasseter',  2006, 117),
-(8,  'Ratatouille',         'Brad Bird',      2007, 115),
-(9,  'WALL-E',              'Andrew Stanton', 2008, 104),
-(10, 'Up',                  'Pete Docter',    2009, 101),
-(11, 'Toy Story 3',         'Lee Unkrich',    2010, 103),
-(12, 'Cars 2',              'John Lasseter',  2011, 120),
-(13, 'Brave',               'Brenda Chapman', 2012, 102),
-(14, 'Monsters University', 'Dan Scanlon',    2013, 110);
+  INSERT INTO movies (id, title, director, year, length_minutes)
+  VALUES
+  (1,  'Toy Story',           'John Lasseter',  1995, 81),
+  (2,  'A Bug''s Life',       'John Lasseter',  1998, 95),
+  (3,  'Toy Story 2',         'John Lasseter',  1999, 93),
+  (4,  'Monsters, Inc.',      'Pete Docter',    2001, 92),
+  (5,  'Finding Nemo',        'Andrew Stanton', 2003, 107),
+  (6,  'The Incredibles',     'Brad Bird',      2004, 116),
+  (7,  'Cars',                'John Lasseter',  2006, 117),
+  (8,  'Ratatouille',         'Brad Bird',      2007, 115),
+  (9,  'WALL-E',              'Andrew Stanton', 2008, 104),
+  (10, 'Up',                  'Pete Docter',    2009, 101),
+  (11, 'Toy Story 3',         'Lee Unkrich',    2010, 103),
+  (12, 'Cars 2',              'John Lasseter',  2011, 120),
+  (13, 'Brave',               'Brenda Chapman', 2012, 102),
+  (14, 'Monsters University', 'Dan Scanlon',    2013, 110);
 
-CREATE TABLE boxoffice (
-  movie_id            INTEGER      PRIMARY KEY,
-  rating              NUMERIC(3,1) NOT NULL,
-  domestic_sales      INTEGER      NOT NULL,
-  international_sales INTEGER      NOT NULL,
-  CONSTRAINT fk_movie
-    FOREIGN KEY (movie_id)
-    REFERENCES movies(id)
-);
+  CREATE TABLE boxoffice (
+    movie_id            INTEGER      PRIMARY KEY,
+    rating              NUMERIC(3,1) NOT NULL,
+    domestic_sales      INTEGER      NOT NULL,
+    international_sales INTEGER      NOT NULL,
+    CONSTRAINT fk_movie
+      FOREIGN KEY (movie_id)
+      REFERENCES movies(id)
+  );
 
-INSERT INTO boxoffice (movie_id, rating, domestic_sales, international_sales)
-VALUES
-(5,  8.2, 380843261, 555900000),
-(14, 7.4, 268492764, 475066843),
-(8,  8.0, 206445654, 417277164),
-(12, 6.4, 191452396, 368400000),
-(3,  7.9, 245852179, 239163000),
-(6,  8.0, 261441092, 370001000),
-(9,  8.5, 223808164, 297503696),
-(11, 8.4, 415004880, 648167031),
-(1,  8.3, 191796233, 170162503),
-(7,  7.2, 244082982, 217900167),
-(10, 8.3, 293004164, 438338580),
-(4,  8.1, 289916256, 272900000),
-(2,  7.2, 162798565, 200600000),
-(13, 7.2, 237283207, 301700000);
-```
+  INSERT INTO boxoffice (movie_id, rating, domestic_sales, international_sales)
+  VALUES
+  (5,  8.2, 380843261, 555900000),
+  (14, 7.4, 268492764, 475066843),
+  (8,  8.0, 206445654, 417277164),
+  (12, 6.4, 191452396, 368400000),
+  (3,  7.9, 245852179, 239163000),
+  (6,  8.0, 261441092, 370001000),
+  (9,  8.5, 223808164, 297503696),
+  (11, 8.4, 415004880, 648167031),
+  (1,  8.3, 191796233, 170162503),
+  (7,  7.2, 244082982, 217900167),
+  (10, 8.3, 293004164, 438338580),
+  (4,  8.1, 289916256, 272900000),
+  (2,  7.2, 162798565, 200600000),
+  (13, 7.2, 237283207, 301700000);
+  ```
 
-```psql
-  \i /home/postgres/dataset/sqlbolt/movies-boxoffice.sql
-```
+  または以下を実行:
 
-## 本文
+  ```psql
+    \i /home/postgres/dataset/sqlbolt/movies-boxoffice.sql
+  ```
+</details>
+
+## 訳文
 
 ここまでは1つのテーブルを扱ってきましたが、
 現実世界ではエンティティデータは、
@@ -110,8 +114,7 @@ VALUES
 両方のテーブルのカラムを結合した結果行を作成する処理です。
 テーブルが結合された後、以前に学んだ他の句が適用されます。
 
-Did you know?
-
+>**Did you know?**  
 `INNER JOIN`が単に`JOIN`と書かれているクエリを見かけることがあります。
 この2つは同じ意味ですが、次のレッスンで紹介する他のタイプの結合を使い始めると、
 クエリが読みやすくなるので、このような結合は内部結合と呼ぶことにします。
@@ -122,10 +125,6 @@ Pixarデータベースに新しいテーブルを追加しました。
 このテーブルの_Movie_id_カラムは、
 **Movies**テーブルの_Id_カラムと1対1で対応します。
 上で紹介した `INNER JOIN` を使って、以下のタスクを解いてみてください。
-
-1. Find the domestic and international sales for each movie
-2. Show the sales numbers for each movie that did better internationally rather than domestically
-3. List all the movies by their ratings in descending order
 
 | id  | title               | director       | year | length_minutes |
 | --- | ------------------- | -------------- | ---- | -------------- |
@@ -161,7 +160,40 @@ Pixarデータベースに新しいテーブルを追加しました。
 | 2        | 7.2    | 162798565      | 200600000           |
 | 13       | 7.2    | 237283207      | 301700000           |
 
-## 原文
+1. Find the domestic and international sales for each movie
+2. Show the sales numbers for each movie that did better internationally rather than domestically
+3. List all the movies by their ratings in descending order
+
+<details>
+  <summary>解答の期待値</summary>
+
+  1. 
+  2. 
+  3. 
+  ```psql
+  ```
+  ```psql
+  ```
+  ```psql
+  ```
+</details>
+
+<details>
+  <summary>解答例</summary>
+
+  1. 
+  2. 
+  3. 
+  ```psql
+  ```
+  ```psql
+  ```
+  ```psql
+  ```
+</details>
+
+<details>
+  <summary>原文</summary>
 
 Up to now, we've been working with a single table, but entity data in the real world is often broken down into pieces and stored across multiple orthogonal tables using a process known as [normalization](http://en.wikipedia.org/wiki/Database_normalization).
 
@@ -189,8 +221,7 @@ Select query with INNER JOIN on multiple tables
 
 The `INNER JOIN` is a process that matches rows from the first table and the second table which have the same key (as defined by the `ON` constraint) to create a result row with the combined columns from both tables. After the tables are joined, the other clauses we learned previously are then applied.
 
-Did you know?
-
+>**Did you know?**  
 You might see queries where the `INNER JOIN` is written simply as a `JOIN`. These two are equivalent, but we will continue to refer to these joins as inner-joins because they make the query easier to read once you start using other types of joins, which will be introduced in the following lesson.
 
 ## Exercise

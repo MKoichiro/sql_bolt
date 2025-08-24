@@ -1,7 +1,7 @@
 # [SQL Lesson 1: SELECT queries 101](https://sqlbolt.com/lesson/select_queries_introduction)
 
 <details>
-  <summary>課題の表を再現するschema兼seedクエリ:</summary>
+  <summary>課題の表を再現するseedコマンド:</summary>
 
   ```SQL
   DROP TABLE IF EXISTS movies;
@@ -31,6 +31,8 @@
   (13, 'Brave',               'Brenda Chapman', 2012, 102),
   (14, 'Monsters University', 'Dan Scanlon',    2013, 110);
   ```
+
+  または以下を実行:
 
   ```psql
     \i /home/postgres/dataset/sqlbolt/movies.sql
@@ -106,151 +108,177 @@ SQLデータベースからデータを取り出すには、`SELECT`文を使い
 4. Find the title and year of each film
 5. Find all the information about each film
 
-## 原文
+<details>
+  <summary>解答の期待値</summary>
 
-To retrieve data from a SQL database, we need to write `SELECT` statements, which are often colloquially refered to as _queries_. A query in itself is just a statement which declares what data we are looking for, where to find it in the database, and optionally, how to transform it before it is returned. It has a specific syntax though, which is what we are going to learn in the following exercises.
+  1. Find the title of each film
+  ```psql
+            title        
+    ---------------------
+     Toy Story
+     A Bug's Life
+     Toy Story 2
+     Monsters, Inc.
+     Finding Nemo
+     The Incredibles
+     Cars
+     Ratatouille
+     WALL-E
+     Up
+     Toy Story 3
+     Cars 2
+     Brave
+     Monsters University
+  ```
+  2. Find the director of each film
+  ```psql
+        director    
+    ----------------
+     John Lasseter
+     John Lasseter
+     John Lasseter
+     Pete Docter
+     Andrew Stanton
+     Brad Bird
+     John Lasseter
+     Brad Bird
+     Andrew Stanton
+     Pete Docter
+     Lee Unkrich
+     John Lasseter
+     Brenda Chapman
+     Dan Scanlon
+  ```
+  3. Find the title and director of each film
+  ```psql
+            title        |    director    
+    ---------------------+----------------
+     Toy Story           | John Lasseter
+     A Bug's Life        | John Lasseter
+     Toy Story 2         | John Lasseter
+     Monsters, Inc.      | Pete Docter
+     Finding Nemo        | Andrew Stanton
+     The Incredibles     | Brad Bird
+     Cars                | John Lasseter
+     Ratatouille         | Brad Bird
+     WALL-E              | Andrew Stanton
+     Up                  | Pete Docter
+     Toy Story 3         | Lee Unkrich
+     Cars 2              | John Lasseter
+     Brave               | Brenda Chapman
+     Monsters University | Dan Scanlon
+  ```
+  4. Find the title and year of each film
+  ```psql
+            title        | year 
+    ---------------------+------
+     Toy Story           | 1995
+     A Bug's Life        | 1998
+     Toy Story 2         | 1999
+     Monsters, Inc.      | 2001
+     Finding Nemo        | 2003
+     The Incredibles     | 2004
+     Cars                | 2006
+     Ratatouille         | 2007
+     WALL-E              | 2008
+     Up                  | 2009
+     Toy Story 3         | 2010
+     Cars 2              | 2011
+     Brave               | 2012
+     Monsters University | 2013
+  ```
+  5. Find all the information about each film
+  ```psql
+     id |        title        |    director    | year | length_minutes 
+    ----+---------------------+----------------+------+----------------
+      1 | Toy Story           | John Lasseter  | 1995 |             81
+      2 | A Bug's Life        | John Lasseter  | 1998 |             95
+      3 | Toy Story 2         | John Lasseter  | 1999 |             93
+      4 | Monsters, Inc.      | Pete Docter    | 2001 |             92
+      5 | Finding Nemo        | Andrew Stanton | 2003 |            107
+      6 | The Incredibles     | Brad Bird      | 2004 |            116
+      7 | Cars                | John Lasseter  | 2006 |            117
+      8 | Ratatouille         | Brad Bird      | 2007 |            115
+      9 | WALL-E              | Andrew Stanton | 2008 |            104
+     10 | Up                  | Pete Docter    | 2009 |            101
+     11 | Toy Story 3         | Lee Unkrich    | 2010 |            103
+     12 | Cars 2              | John Lasseter  | 2011 |            120
+     13 | Brave               | Brenda Chapman | 2012 |            102
+     14 | Monsters University | Dan Scanlon    | 2013 |            110
+  ```
+</details>
 
-As we mentioned in the introduction, you can think of a table in SQL as a type of an entity (ie. Dogs), and each row in that table as a specific _instance_ of that type (ie. A pug, a beagle, a different colored pug, etc). This means that the columns would then represent the common properties shared by all instances of that entity (ie. Color of fur, length of tail, etc).
+<details>
+  <summary>解答例</summary>
 
-And given a table of data, the most basic query we could write would be one that selects for a couple columns (properties) of the table with all the rows (instances).
+  1. Find the title of each film
+  ```psql
+    SELECT title FROM movies;
+  ```
+  2. Find the director of each film
+  ```psql
+    SELECT director FROM movies;
+  ```
+  3. Find the title and director of each film
+  ```psql
+    SELECT title, director FROM movies;
+  ```
+  4. Find the title and year of each film
+  ```psql
+    SELECT title, year FROM movies;
+  ```
+  5. Find all the information about each film
+  ```psql
+    SELECT * FROM movies;
+  ```
+</details>
 
-Select query for a specific columns
+<details>
+  <summary>原文</summary>
 
-`SELECT column, another_column, … FROM mytable;`
+  To retrieve data from a SQL database, we need to write `SELECT` statements, which are often colloquially refered to as _queries_. A query in itself is just a statement which declares what data we are looking for, where to find it in the database, and optionally, how to transform it before it is returned. It has a specific syntax though, which is what we are going to learn in the following exercises.
 
-The result of this query will be a two-dimensional set of rows and columns, effectively a copy of the table, but only with the columns that we requested.
+  As we mentioned in the introduction, you can think of a table in SQL as a type of an entity (ie. Dogs), and each row in that table as a specific _instance_ of that type (ie. A pug, a beagle, a different colored pug, etc). This means that the columns would then represent the common properties shared by all instances of that entity (ie. Color of fur, length of tail, etc).
 
-If we want to retrieve absolutely all the columns of data from a table, we can then use the asterisk (`*`) shorthand in place of listing all the column names individually.
+  And given a table of data, the most basic query we could write would be one that selects for a couple columns (properties) of the table with all the rows (instances).
 
-Select query for all columns
+  Select query for a specific columns
 
-`SELECT * FROM mytable;`
+  `SELECT column, another_column, … FROM mytable;`
 
-This query, in particular, is really useful because it's a simple way to inspect a table by dumping all the data at once.
+  The result of this query will be a two-dimensional set of rows and columns, effectively a copy of the table, but only with the columns that we requested.
 
-## Exercise
+  If we want to retrieve absolutely all the columns of data from a table, we can then use the asterisk (`*`) shorthand in place of listing all the column names individually.
 
-We will be using a database with data about some of Pixar's classic movies for most of our exercises. This first exercise will only involve the **Movies** table, and the default query below currently shows all the properties of each movie. To continue onto the next lesson, alter the query to find the exact information we need for each task.
+  Select query for all columns
 
-| id  | title               | director       | year | length_minutes |
-| --- | ------------------- | -------------- | ---- | -------------- |
-| 1   | Toy Story           | John Lasseter  | 1995 | 81             |
-| 2   | A Bug's Life        | John Lasseter  | 1998 | 95             |
-| 3   | Toy Story 2         | John Lasseter  | 1999 | 93             |
-| 4   | Monsters, Inc.      | Pete Docter    | 2001 | 92             |
-| 5   | Finding Nemo        | Andrew Stanton | 2003 | 107            |
-| 6   | The Incredibles     | Brad Bird      | 2004 | 116            |
-| 7   | Cars                | John Lasseter  | 2006 | 117            |
-| 8   | Ratatouille         | Brad Bird      | 2007 | 115            |
-| 9   | WALL-E              | Andrew Stanton | 2008 | 104            |
-| 10  | Up                  | Pete Docter    | 2009 | 101            |
-| 11  | Toy Story 3         | Lee Unkrich    | 2010 | 103            |
-| 12  | Cars 2              | John Lasseter  | 2011 | 120            |
-| 13  | Brave               | Brenda Chapman | 2012 | 102            |
-| 14  | Monsters University | Dan Scanlon    | 2013 | 110            |
+  `SELECT * FROM mytable;`
 
-1. Find the title of each film
-2. Find the director of each film
-3. Find the title and director of each film
-4. Find the title and year of each film
-5. Find all the information about each film
+  This query, in particular, is really useful because it's a simple way to inspect a table by dumping all the data at once.
 
-## 解答例
-```psql
-postgres=# SELECT title FROM movies;
-        title        
----------------------
- Toy Story
- A Bug's Life
- Toy Story 2
- Monsters, Inc.
- Finding Nemo
- The Incredibles
- Cars
- Ratatouille
- WALL-E
- Up
- Toy Story 3
- Cars 2
- Brave
- Monsters University
-(14 rows)
+  ## Exercise
 
-postgres=# SELECT director FROM movies;
-    director    
-----------------
- John Lasseter
- John Lasseter
- John Lasseter
- Pete Docter
- Andrew Stanton
- Brad Bird
- John Lasseter
- Brad Bird
- Andrew Stanton
- Pete Docter
- Lee Unkrich
- John Lasseter
- Brenda Chapman
- Dan Scanlon
-(14 rows)
+  We will be using a database with data about some of Pixar's classic movies for most of our exercises. This first exercise will only involve the **Movies** table, and the default query below currently shows all the properties of each movie. To continue onto the next lesson, alter the query to find the exact information we need for each task.
 
-postgres=# SELECT title, director FROM movies;
-        title        |    director    
----------------------+----------------
- Toy Story           | John Lasseter
- A Bug's Life        | John Lasseter
- Toy Story 2         | John Lasseter
- Monsters, Inc.      | Pete Docter
- Finding Nemo        | Andrew Stanton
- The Incredibles     | Brad Bird
- Cars                | John Lasseter
- Ratatouille         | Brad Bird
- WALL-E              | Andrew Stanton
- Up                  | Pete Docter
- Toy Story 3         | Lee Unkrich
- Cars 2              | John Lasseter
- Brave               | Brenda Chapman
- Monsters University | Dan Scanlon
-(14 rows)
+  | id  | title               | director       | year | length_minutes |
+  | --- | ------------------- | -------------- | ---- | -------------- |
+  | 1   | Toy Story           | John Lasseter  | 1995 | 81             |
+  | 2   | A Bug's Life        | John Lasseter  | 1998 | 95             |
+  | 3   | Toy Story 2         | John Lasseter  | 1999 | 93             |
+  | 4   | Monsters, Inc.      | Pete Docter    | 2001 | 92             |
+  | 5   | Finding Nemo        | Andrew Stanton | 2003 | 107            |
+  | 6   | The Incredibles     | Brad Bird      | 2004 | 116            |
+  | 7   | Cars                | John Lasseter  | 2006 | 117            |
+  | 8   | Ratatouille         | Brad Bird      | 2007 | 115            |
+  | 9   | WALL-E              | Andrew Stanton | 2008 | 104            |
+  | 10  | Up                  | Pete Docter    | 2009 | 101            |
+  | 11  | Toy Story 3         | Lee Unkrich    | 2010 | 103            |
+  | 12  | Cars 2              | John Lasseter  | 2011 | 120            |
+  | 13  | Brave               | Brenda Chapman | 2012 | 102            |
+  | 14  | Monsters University | Dan Scanlon    | 2013 | 110            |
 
-postgres=# SELECT title, year FROM movies;
-        title        | year 
----------------------+------
- Toy Story           | 1995
- A Bug's Life        | 1998
- Toy Story 2         | 1999
- Monsters, Inc.      | 2001
- Finding Nemo        | 2003
- The Incredibles     | 2004
- Cars                | 2006
- Ratatouille         | 2007
- WALL-E              | 2008
- Up                  | 2009
- Toy Story 3         | 2010
- Cars 2              | 2011
- Brave               | 2012
- Monsters University | 2013
-(14 rows)
-
-postgres=# SELECT * FROM movies;
- id |        title        |    director    | year | length_minutes 
-----+---------------------+----------------+------+----------------
-  1 | Toy Story           | John Lasseter  | 1995 |             81
-  2 | A Bug's Life        | John Lasseter  | 1998 |             95
-  3 | Toy Story 2         | John Lasseter  | 1999 |             93
-  4 | Monsters, Inc.      | Pete Docter    | 2001 |             92
-  5 | Finding Nemo        | Andrew Stanton | 2003 |            107
-  6 | The Incredibles     | Brad Bird      | 2004 |            116
-  7 | Cars                | John Lasseter  | 2006 |            117
-  8 | Ratatouille         | Brad Bird      | 2007 |            115
-  9 | WALL-E              | Andrew Stanton | 2008 |            104
- 10 | Up                  | Pete Docter    | 2009 |            101
- 11 | Toy Story 3         | Lee Unkrich    | 2010 |            103
- 12 | Cars 2              | John Lasseter  | 2011 |            120
- 13 | Brave               | Brenda Chapman | 2012 |            102
- 14 | Monsters University | Dan Scanlon    | 2013 |            110
-(14 rows)
-
-postgres=# 
-```
+  1. Find the title of each film
+  2. Find the director of each film
+  3. Find the title and director of each film
+  4. Find the title and year of each film
+  5. Find all the information about each film

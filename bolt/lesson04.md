@@ -1,41 +1,45 @@
 # [SQL Lesson 4: Filtering and sorting Query results](https://sqlbolt.com/lesson/filtering_sorting_query_results)
 
-課題の表を再現するschema兼seedクエリ:
+<details>
+  <summary>課題の表を再現するseedコマンド:</summary>
 
-```SQL
-DROP TABLE IF EXISTS movies;
+  ```SQL
+  DROP TABLE IF EXISTS movies;
 
-CREATE TABLE IF NOT EXISTS movies (
-  id              INTEGER         PRIMARY KEY,
-  title           VARCHAR(255)    NOT NULL,
-  director        VARCHAR(255)    NOT NULL,
-  year            INTEGER         NOT NULL,
-  length_minutes  INTEGER         NOT NULL
-);
+  CREATE TABLE IF NOT EXISTS movies (
+    id              INTEGER         PRIMARY KEY,
+    title           VARCHAR(255)    NOT NULL,
+    director        VARCHAR(255)    NOT NULL,
+    year            INTEGER         NOT NULL,
+    length_minutes  INTEGER         NOT NULL
+  );
 
-INSERT INTO movies (id, title, director, year, length_minutes)
-VALUES
-(1,  'Toy Story',           'John Lasseter',  1995, 81),
-(2,  'A Bug''s Life',       'John Lasseter',  1998, 95),
-(3,  'Toy Story 2',         'John Lasseter',  1999, 93),
-(4,  'Monsters, Inc.',      'Pete Docter',    2001, 92),
-(5,  'Finding Nemo',        'Andrew Stanton', 2003, 107),
-(6,  'The Incredibles',     'Brad Bird',      2004, 116),
-(7,  'Cars',                'John Lasseter',  2006, 117),
-(8,  'Ratatouille',         'Brad Bird',      2007, 115),
-(9,  'WALL-E',              'Andrew Stanton', 2008, 104),
-(10, 'Up',                  'Pete Docter',    2009, 101),
-(11, 'Toy Story 3',         'Lee Unkrich',    2010, 103),
-(12, 'Cars 2',              'John Lasseter',  2011, 120),
-(13, 'Brave',               'Brenda Chapman', 2012, 102),
-(14, 'Monsters University', 'Dan Scanlon',    2013, 110);
-```
+  INSERT INTO movies (id, title, director, year, length_minutes)
+  VALUES
+  (1,  'Toy Story',           'John Lasseter',  1995, 81),
+  (2,  'A Bug''s Life',       'John Lasseter',  1998, 95),
+  (3,  'Toy Story 2',         'John Lasseter',  1999, 93),
+  (4,  'Monsters, Inc.',      'Pete Docter',    2001, 92),
+  (5,  'Finding Nemo',        'Andrew Stanton', 2003, 107),
+  (6,  'The Incredibles',     'Brad Bird',      2004, 116),
+  (7,  'Cars',                'John Lasseter',  2006, 117),
+  (8,  'Ratatouille',         'Brad Bird',      2007, 115),
+  (9,  'WALL-E',              'Andrew Stanton', 2008, 104),
+  (10, 'Up',                  'Pete Docter',    2009, 101),
+  (11, 'Toy Story 3',         'Lee Unkrich',    2010, 103),
+  (12, 'Cars 2',              'John Lasseter',  2011, 120),
+  (13, 'Brave',               'Brenda Chapman', 2012, 102),
+  (14, 'Monsters University', 'Dan Scanlon',    2013, 110);
+  ```
 
-```psql
-  \i /home/postgres/dataset/sqlbolt/movies.sql
-```
+  または以下を実行:
 
-## 本文
+  ```psql
+    \i /home/postgres/dataset/sqlbolt/movies.sql
+  ```
+</details>
+
+## 訳文
 
 データベース内のデータが一意であっても、
 特定のクエリの結果が一意でない場合があります。
@@ -91,8 +95,7 @@ RedditやPinterestのようなウェブサイトを考えてみると、
 これらの句を使うことで、データベースはクエリをより速く効率的に実行し、
 要求されたコンテンツだけを処理して返すことができる。
 
-ご存知でしたか？
-
+>**Did you know?**  
 `LIMIT`と`OFFSET`がいつクエリの他の部分と相対的に適用されるのか気になる方は、
 一般的に他の句が適用された後に最後に適用されます。
 これについては、[Lesson 12: 実行順序](https://sqlbolt.com/lesson/select_queries_order_of_execution)で、
@@ -128,49 +131,90 @@ RedditやPinterestのようなウェブサイトを考えてみると、
 3. List the first five Pixar movies sorted alphabetically
 4. List the next five Pixar movies sorted alphabetically
 
-## 原文
+<details>
+  <summary>解答の期待値</summary>
 
-Even though the data in a database may be unique, the results of any particular query may not be – take our Movies table for example, many different movies can be released the same year. In such cases, SQL provides a convenient way to discard rows that have a duplicate column value by using the `DISTINCT` keyword.
+  1. 
+  2. 
+  3. 
+  4. 
+  5. 
+  ```psql
+  ```
+  ```psql
+  ```
+  ```psql
+  ```
+  ```psql
+  ```
+  ```psql
+  ```
+</details>
 
-Select query with unique results:
+<details>
+  <summary>解答例</summary>
 
-```SQL
-  SELECT DISTINCT column, another_column, … FROM mytable WHERE condition(s);
-```
+  1. 
+  2. 
+  3. 
+  4. 
+  5. 
+  ```psql
+  ```
+  ```psql
+  ```
+  ```psql
+  ```
+  ```psql
+  ```
+  ```psql
+  ```
+</details>
 
-Since the `DISTINCT` keyword will blindly remove duplicate rows, we will learn in a future lesson how to discard duplicates based on specific columns using grouping and the `GROUP BY` clause.
+<details>
+  <summary>原文</summary>
 
-## Ordering results
+  Even though the data in a database may be unique, the results of any particular query may not be – take our Movies table for example, many different movies can be released the same year. In such cases, SQL provides a convenient way to discard rows that have a duplicate column value by using the `DISTINCT` keyword.
 
-Unlike our neatly ordered table in the last few lessons, most data in real databases are added in no particular column order. As a result, it can be difficult to read through and understand the results of a query as the size of a table increases to thousands or even millions rows.
+  Select query with unique results:
 
-To help with this, SQL provides a way to sort your results by a given column in ascending or descending order using the `ORDER BY` clause.
+  ```SQL
+    SELECT DISTINCT column, another_column, … FROM mytable WHERE condition(s);
+  ```
 
-Select query with ordered results:
+  Since the `DISTINCT` keyword will blindly remove duplicate rows, we will learn in a future lesson how to discard duplicates based on specific columns using grouping and the `GROUP BY` clause.
 
-```SQL
-  SELECT column, another_column, … FROM mytable WHERE condition(s) ORDER BY column ASC/DESC;
-```
+  ## Ordering results
 
-When an `ORDER BY` clause is specified, each row is sorted alpha-numerically based on the specified column's value. In some databases, you can also specify a collation to better sort data containing international text.
+  Unlike our neatly ordered table in the last few lessons, most data in real databases are added in no particular column order. As a result, it can be difficult to read through and understand the results of a query as the size of a table increases to thousands or even millions rows.
 
-## Limiting results to a subset
+  To help with this, SQL provides a way to sort your results by a given column in ascending or descending order using the `ORDER BY` clause.
 
-Another clause which is commonly used with the `ORDER BY` clause are the `LIMIT` and `OFFSET` clauses, which are a useful optimization to indicate to the database the subset of the results you care about.  
-The `LIMIT` will reduce the number of rows to return, and the optional `OFFSET` will specify where to begin counting the number rows from.
+  Select query with ordered results:
 
-Select query with limited rows:
+  ```SQL
+    SELECT column, another_column, … FROM mytable WHERE condition(s) ORDER BY column ASC/DESC;
+  ```
 
-```SQL
-  SELECT column, another_column, … FROM mytable WHERE condition(s) ORDER BY column ASC/DESC LIMIT num_limit OFFSET num_offset;
-```
+  When an `ORDER BY` clause is specified, each row is sorted alpha-numerically based on the specified column's value. In some databases, you can also specify a collation to better sort data containing international text.
 
-If you think about websites like Reddit or Pinterest, the front page is a list of links sorted by popularity and time, and each subsequent page can be represented by sets of links at different offsets in the database. Using these clauses, the database can then execute queries faster and more efficiently by processing and returning only the requested content.
+  ## Limiting results to a subset
 
-Did you know?
+  Another clause which is commonly used with the `ORDER BY` clause are the `LIMIT` and `OFFSET` clauses, which are a useful optimization to indicate to the database the subset of the results you care about.  
+  The `LIMIT` will reduce the number of rows to return, and the optional `OFFSET` will specify where to begin counting the number rows from.
 
-If you are curious about when the `LIMIT` and `OFFSET` are applied relative to the other parts of a query, they are generally done last after the other clauses have been applied. We'll touch more on this in [Lesson 12: Order of execution](https://sqlbolt.com/lesson/select_queries_order_of_execution) after introducting a few more parts of the query.
+  Select query with limited rows:
 
-## Exercise
+  ```SQL
+    SELECT column, another_column, … FROM mytable WHERE condition(s) ORDER BY column ASC/DESC LIMIT num_limit OFFSET num_offset;
+  ```
 
-There are a few concepts in this lesson, but all are pretty straight-forward to apply. To spice things up, we've gone and scrambled the **Movies** table for you in the exercise to better mimic what kind of data you might see in real life. Try and use the necessary keywords and clauses introduced above in your queries.
+  If you think about websites like Reddit or Pinterest, the front page is a list of links sorted by popularity and time, and each subsequent page can be represented by sets of links at different offsets in the database. Using these clauses, the database can then execute queries faster and more efficiently by processing and returning only the requested content.
+
+  >**Did you know?**  
+  If you are curious about when the `LIMIT` and `OFFSET` are applied relative to the other parts of a query, they are generally done last after the other clauses have been applied. We'll touch more on this in [Lesson 12: Order of execution](https://sqlbolt.com/lesson/select_queries_order_of_execution) after introducting a few more parts of the query.
+
+  ## Exercise
+
+  There are a few concepts in this lesson, but all are pretty straight-forward to apply. To spice things up, we've gone and scrambled the **Movies** table for you in the exercise to better mimic what kind of data you might see in real life. Try and use the necessary keywords and clauses introduced above in your queries.
+</details>
