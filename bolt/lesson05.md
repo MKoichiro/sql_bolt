@@ -41,13 +41,13 @@
 
 ## 訳文
 
-ここまでよく頑張りました！基本的なクエリの書き方を学んだところで、
-実際の問題を解決するクエリを書く練習をしましょう。
+ここまででひと区切りです！基本的なクエリの書き方を学んだところで、
+より実践的なクエリを書く練習をしましょう。
 
-SELECT クエリ:
+`SELECT` クエリ:
 
 ```SQL
-  SELECT column, another_column, ... FROM mytable WHERE condition(s) ORDER BY column ASC/DESC LIMIT num_limit OFFSET num_offset；
+  SELECT column, another_column, ... FROM mytable WHERE condition(s) ORDER BY column ASC/DESC LIMIT num_limit OFFSET num_offset;
 ```
 
 ## 練習問題
@@ -58,14 +58,17 @@ SELECT クエリ:
 の人口や地理的な位置などの情報が含まれています。
 
 >**Did you know?**  
-正の緯度は北半球に対応し、正の経度は東半球に対応する。
-北アメリカは赤道より北にあり、本初子午線より西にあるため、
-リストにある都市はすべて、正の緯度と負の経度を持つ。
+北半球は正の緯度(latitude)、東半球は正の経度(longitude)です。
+リストにある都市はすべて北アメリカです。
+北アメリカは赤道より北、本初子午線より西にあるため、
+すべて正の緯度と負の経度となっています。
 
-以下のタスクで求められている情報を見つけるために、
-いくつかのクエリを書いてみてください。
-各タスクのクエリでは、異なる句の組み合わせを使用する必要があるかもしれません。
-複数のテーブルにまたがるクエリについては、次のレッスンに進んでください。
+以下のタスクにしたがってクエリを書いてみてください。
+異なる句の組み合わせを使用する必要があるかもしれません。
+なお、次のレッスンでは複数のテーブルにまたがるクエリについて学習します。
+
+>追記１  
+テーブル名は、**"north_american_cities"** です。
 
 | city                | country       | population | latitude  | longitude   |
 | ------------------- | ------------- | ---------- | --------- | ----------- |
@@ -85,46 +88,82 @@ SELECT クエリ:
 1. List all the Canadian cities and their populations
 2. Order all the cities in the United States by their latitude from north to south
 3. List all the cities west of Chicago, ordered from west to east
+>追記２  
+この時点では、シカゴの経度は -87.629798 をそのまま使いましょう。
+あとのlessonで**サブクエリ**を学習すると、このようなマジックナンバーは回避できます。
 4. List the two largest cities in Mexico (by population)
 5. List the third and fourth largest cities (by population) in the United States and their population
 
 <details>
   <summary>解答の期待値</summary>
 
-  1. 
-  2. 
-  3. 
-  4. 
-  5. 
+  1. List all the Canadian cities and their populations
   ```psql
+      city   | population
+    ----------+------------
+     Toronto  |    2795060
+     Montreal |    1717767
   ```
+  2. Order all the cities in the United States by their latitude from north to south
   ```psql
+     id |     city     |    country    | population | latitude  |  longitude
+    ----+--------------+---------------+------------+-----------+-------------
+     12 | Chicago      | United States |    2718782 | 41.878114 |  -87.629798
+      4 | New York     | United States |    8405837 | 40.712784 |  -74.005941
+      5 | Philadelphia | United States |    1553165 | 39.952584 |  -75.165222
+      9 | Los Angeles  | United States |    3884307 | 34.052234 | -118.243685
+      8 | Phoenix      | United States |    1513367 | 33.448377 | -112.074037
+      3 | Houston      | United States |    2195914 | 29.760427 |  -95.369803
   ```
+  3. List all the cities west of Chicago, ordered from west to east
   ```psql
+     id |        city         |    country    | population | latitude  |  longitude
+    ----+---------------------+---------------+------------+-----------+-------------
+      9 | Los Angeles         | United States |    3884307 | 34.052234 | -118.243685
+      8 | Phoenix             | United States |    1513367 | 33.448377 | -112.074037
+      1 | Guadalajara         | Mexico        |    1500800 | 20.659699 | -103.349609
+      7 | Mexico City         | Mexico        |    8555500 | 19.432608 |  -99.133208
+     10 | Ecatepec de Morelos | Mexico        |    1742000 | 19.601841 |  -99.050674
+      3 | Houston             | United States |    2195914 | 29.760427 |  -95.369803
   ```
+  4. List the two largest cities in Mexico (by population)
   ```psql
+     id |        city         | country | population | latitude  | longitude
+    ----+---------------------+---------+------------+-----------+------------
+      7 | Mexico City         | Mexico  |    8555500 | 19.432608 | -99.133208
+     10 | Ecatepec de Morelos | Mexico  |    1742000 | 19.601841 | -99.050674
   ```
+  5. List the third and fourth largest cities (by population) in the United States and their population
   ```psql
+   id |  city   |    country    | population | latitude  | longitude
+  ----+---------+---------------+------------+-----------+------------
+   12 | Chicago | United States |    2718782 | 41.878114 | -87.629798
+    3 | Houston | United States |    2195914 | 29.760427 | -95.369803
   ```
 </details>
 
 <details>
   <summary>解答例</summary>
 
-  1. 
-  2. 
-  3. 
-  4. 
-  5. 
+  1. List all the Canadian cities and their populations
   ```psql
+    SELECT city, population FROM north_american_cities WHERE country = 'Canada';
   ```
+  2. Order all the cities in the United States by their latitude from north to south
   ```psql
+    SELECT * FROM north_american_cities WHERE country = 'United States' ORDER BY latitude DESC;
   ```
+  3. List all the cities west of Chicago, ordered from west to east
   ```psql
+    SELECT * FROM north_american_cities WHERE longitude < -87.629798 ORDER BY longitude ASC;
   ```
+  4. List the two largest cities in Mexico (by population)
   ```psql
+    SELECT * FROM north_american_cities WHERE country = 'Mexico' ORDER BY population DESC LIMIT 2;
   ```
+  5. List the third and fourth largest cities (by population) in the United States and their population
   ```psql
+    SELECT * FROM north_american_cities WHERE country = 'United States' ORDER BY population DESC LIMIT 2 OFFSET 2;
   ```
 </details>
 

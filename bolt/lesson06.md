@@ -97,7 +97,7 @@
 この一意なキーを使って2つの別々のテーブルの行データを結合することができます。
 最初に紹介する結合は `INNER JOIN` です。
 
-複数のテーブルで`INNER JOIN`を使用した選択クエリ:
+複数のテーブルで`INNER JOIN`を使用した `SELECT` クエリ:
 
 ```SQL
   SELECT column, another_table_column, ...

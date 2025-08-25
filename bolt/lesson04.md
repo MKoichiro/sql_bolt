@@ -41,73 +41,91 @@
 
 ## 訳文
 
-データベース内のデータが一意であっても、
-特定のクエリの結果が一意でない場合があります。
-例えば、Moviesテーブルを例にとると、
-同じ年に多くの異なる映画が公開される可能性があります。
-このような場合、SQLでは`DISTINCT`キーワードを使用することで、
-重複したカラム値を持つ行を破棄することができます。
+データベース内のデータは通常、行全体では互いに一意であるように設計されますが、
+クエリの結果としては、一部の列に条件をかけて取得するので、必ずしも一意とは限りません。
+Movies テーブルを例にとると、同じ監督による作品は複数存在しえます。
+（例えば、2000 年以前の映画の監督を取得すると、John Lasseter、John Lasseter、John Lasseter のように重複し得るということです。）
+このような場合、SQL では `DISTINCT` キーワードを使うことで、
+`SELECT` で指定した列の値（複数列の場合は値の組み合わせ）が同一の行を、
+結果からまとめて1行にできます。
 
-一意な結果を持つ選択クエリ:
+一意な結果を持つ `SELECT` クエリ:
 
 ```SQL
   SELECT DISTINCT column, another_column, ... FROM mytable WHERE condition(s);
 ```
 
-`DISTINCT`キーワードは重複行をやみくもに削除してしまうので、
-グループ化と`GROUP BY`句を使用して、
-特定のカラムに基づいて重複行を破棄する方法を今後のレッスンで学びます。
+なお、`DISTINCT` は指定列の組み合わせが同じなら、
+ほかの列が違っても1行に集約されるため、
+特定の列だけで重複排除したいときは、今後学ぶ `GROUP BY` を使います。
 
-## 結果の順序付け
+## 結果のソート
 
-ここ数回のレッスンで整然と並べられたテーブルとは異なり、
-実際のデータベースのほとんどのデータは、
-特定のカラムの順番に追加されることはありません。
+レッスンでは id 順かつ公開年順にある程度きれいに行が並べられていますが、
+実際のデータベースでは、
+このように特定のカラムの順番に並べられていることはありません。
+追加順に行が増えていくだけだからです。
 その結果、テーブルのサイズが何千行、何百万行と大きくなるにつれて、
-クエリの結果を読み解くことが難しくなります。
+クエリの結果を読み解くことは困難になります。
 
-これを解決するために、SQLでは`ORDER BY`句を使って、
-指定したカラムの昇順または降順で結果を並べ替えることができます。
+これを解決するために、SQL には `ORDER BY` 句が用意されています。
+これにより、指定したカラムの昇順または降順で、
+データ取得後に結果をソートすることができます。
 
-結果を並べ替えたセレクトクエリ:
+結果を並べ替えた `SELECT` クエリ:
 
 ```SQL
   SELECT column, another_column, ... FROM mytable WHERE condition(s) ORDER BY column ASC/DESC;
 ```
 
-`ORDER BY`句が指定されると、各行は指定されたカラムの値に基づいてアルファベット順にソートされます。
-データベースによっては、国際的なテキストを含むデータをより適切にソートするために照合順序を指定することもできます。
+`ORDER BY` 句が指定されると、
+各行は指定されたカラムの値に基づいて（文字列ならば）アルファベット順にソートされます。
+DBMSによっては、
+言語ごとに照合順序が用意されており、
+適切な言語を指定することもできます。
 
-## 結果をサブセットに限定する
+>追記１  
+>- `ASC` の場合は省略可能。
+>- `ORDER BY column1, column2` のように複数指定すると、column1 について比較し並べたあと、決着しない部分は column2 を見て並べる。
 
-`ORDER BY` 節と一緒によく使われるもうひとつの節は `LIMIT` 節と `OFFSET` 節です。
-`LIMIT` は返す行数を減らし、オプションの `OFFSET` はどこから行数をカウントし始めるかを指定します。
+>追記２  
+NULL の並び位置はDBMSで既定が異なる（例：PostgreSQL/Oracle では **NULL は最後**、MySQL/SQL Server では **NULL は最初**）。必要に応じて `NULLS FIRST/LAST` や `ORDER BY (col IS NULL), col` で明示する対応。
 
-行数を制限したセレクトクエリ:
+## 結果の件数を指定する
+
+`ORDER BY` 句はしばしば `LIMIT` 句や `OFFSET` 句とセットで使用します。
+`LIMIT` は返す行数を制限する指定で、
+オプションの `OFFSET` は、さらにどこから行数をカウントし始めるかを指定します。
+
+行数を制限した `SELECT` クエリ:
 
 ```SQL
   SELECT column, another_column, ... FROM mytable WHERE condition(s) ORDER BY column ASC/DESC LIMIT num_limit OFFSET num_offset;
 ```
 
-RedditやPinterestのようなウェブサイトを考えてみると、
+>追記３  
+>- `OFFSET 5` は、**6件目以降**になる。
+>- ※ DBMS 方言: 
+SQL Server は `TOP / OFFSET … FETCH`、標準 SQL は `FETCH FIRST n ROWS ONLY` も使用されます。
+
+Reddit や Pinterest のようなウェブサイトを考えてみると、
 トップページは人気順と時間順に並べ替えられたリンクのリストであり、
 それに続く各ページはデータベース内の異なるオフセットにあるリンクのセットで表すことができます。
 これらの句を使うことで、データベースはクエリをより速く効率的に実行し、
-要求されたコンテンツだけを処理して返すことができる。
+要求されたコンテンツだけを処理して返すことが可能になります。
+
 
 >**Did you know?**  
-`LIMIT`と`OFFSET`がいつクエリの他の部分と相対的に適用されるのか気になる方は、
-一般的に他の句が適用された後に最後に適用されます。
-これについては、[Lesson 12: 実行順序](https://sqlbolt.com/lesson/select_queries_order_of_execution)で、
-もう少しクエリの部分を紹介した後に触れることにします。
+`LIMIT` と `OFFSET` がクエリ内でいつ評価されるかという優先度についてですが、
+一般的には、他の句が評価された後、最後に評価されます。
+なお、優先度については、
+[Lesson 12: 実行順序](https://sqlbolt.com/lesson/select_queries_order_of_execution)
+でより詳しく触れることにします。
 
 ## 練習問題
 
-このレッスンにはいくつかのコンセプトがありますが、
-どれも適用するのはとても簡単です。
-練習問題では、実際にどのようなデータを見ることができるかをよりよく模倣するために、
-**Movies**テーブルをスクランブルしてみました。
-上記で紹介した必要なキーワードと句をクエリに使ってみてください。
+このレッスンには新たな概念が複数登場しましたが、そんなに難しいものではありません。
+上記で紹介した必要なキーワードや句を使ってクエリを構成してみてください。
 
 | id  | title               | director       | year | length_minutes |
 | --- | ------------------- | -------------- | ---- | -------------- |
@@ -134,40 +152,67 @@ RedditやPinterestのようなウェブサイトを考えてみると、
 <details>
   <summary>解答の期待値</summary>
 
-  1. 
-  2. 
-  3. 
-  4. 
-  5. 
+  1. List all directors of Pixar movies (alphabetically), without duplicates
   ```psql
+        director
+    ----------------
+     Andrew Stanton
+     Brad Bird
+     Brenda Chapman
+     Dan Scanlon
+     John Lasseter
+     Lee Unkrich
+     Pete Docter
   ```
+  2. List the last four Pixar movies released (ordered from most recent to least)
   ```psql
+     id |        title        |    director    | year | length_minutes
+    ----+---------------------+----------------+------+----------------
+     14 | Monsters University | Dan Scanlon    | 2013 |            110
+     13 | Brave               | Brenda Chapman | 2012 |            102
+     12 | Cars 2              | John Lasseter  | 2011 |            120
+     11 | Toy Story 3         | Lee Unkrich    | 2010 |            103
   ```
+  3. List the first five Pixar movies sorted alphabetically
   ```psql
+     id |    title     |    director    | year | length_minutes
+    ----+--------------+----------------+------+----------------
+      2 | A Bug's Life | John Lasseter  | 1998 |             95
+     13 | Brave        | Brenda Chapman | 2012 |            102
+      7 | Cars         | John Lasseter  | 2006 |            117
+     12 | Cars 2       | John Lasseter  | 2011 |            120
+      5 | Finding Nemo | Andrew Stanton | 2003 |            107
   ```
+  4. List the next five Pixar movies sorted alphabetically
   ```psql
-  ```
-  ```psql
+     id |        title        |   director    | year | length_minutes
+    ----+---------------------+---------------+------+----------------
+      4 | Monsters, Inc.      | Pete Docter   | 2001 |             92
+     14 | Monsters University | Dan Scanlon   | 2013 |            110
+      8 | Ratatouille         | Brad Bird     | 2007 |            115
+      6 | The Incredibles     | Brad Bird     | 2004 |            116
+      1 | Toy Story           | John Lasseter | 1995 |             81
   ```
 </details>
 
 <details>
   <summary>解答例</summary>
 
-  1. 
-  2. 
-  3. 
-  4. 
-  5. 
+  1. List all directors of Pixar movies (alphabetically), without duplicates
   ```psql
+    SELECT DISTINCT director FROM movies ORDER BY director;
   ```
+  2. List the last four Pixar movies released (ordered from most recent to least)
   ```psql
+    SELECT * FROM movies ORDER BY year DESC LIMIT 4;
   ```
+  3. List the first five Pixar movies sorted alphabetically
   ```psql
+    SELECT * FROM movies ORDER BY title ASC LIMIT 5;
   ```
+  4. List the next five Pixar movies sorted alphabetically
   ```psql
-  ```
-  ```psql
+    SELECT * FROM movies ORDER BY title ASC LIMIT 5 OFFSET 5;
   ```
 </details>
 

@@ -64,7 +64,7 @@
 必要なデータが結果から取り残されないようにするためには、
 代わりに`LEFT JOIN`、`RIGHT JOIN`、`FULL JOIN`を使用する必要があります。
 
-複数のテーブルに LEFT/RIGHT/FULL JOIN を使用した選択クエリ:
+複数のテーブルに LEFT/RIGHT/FULL JOIN を使用した `SELECT` クエリ:
 
 ```SQL
   SELECT column, another_column, ...
