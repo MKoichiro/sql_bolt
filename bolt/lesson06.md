@@ -68,7 +68,7 @@
 
 ## 訳文
 
-ここまでは1つのテーブルを扱ってきましたが、
+ここまでは１つのテーブルを扱ってきましたが、
 現実世界ではエンティティデータは、
 [正規化](http://en.wikipedia.org/wiki/Database_normalization)
 と呼ばれる処理によって、
@@ -76,28 +76,29 @@
 
 ## データベースの正規化
 
-データベースの正規化は、
-1つのテーブル内の重複データを最小化し、
-データベース内のデータが互いに独立に成長することを可能にするため、
-有用である
-（例えば、自動車のエンジンの種類は、それぞれの自動車の種類から独立して成長することができる）。
-トレードオフとして、
-クエリはデータベースのさまざまな部分からデータを見つける必要があるため、
-若干複雑になります。
+データベースが正規化されていると、
+１つのテーブル内の重複データを最小化され、
+データは互いに独立に累積することができます。
+（例えば、自動車テーブルにひとまとめにするのではなく、
+エンジンに対しては別途エンジンテーブルを用意すれば、
+エンジンの種類が、自動車の（名前の）種類とは
+独立して追加することができるようになります）。
+トレードオフとして、クエリは若干複雑になります。
 
-正規化データベースの複数のテーブルにまたがるデータを持つエンティティに関する質問に答えるには、
-すべてのデータを結合して必要な情報を正確に引き出すクエリの書き方を学ぶ必要があります。
+正規化データベースの複数のテーブルにまたがるデータを持つエンティティにを扱うには、
+複数テーブルのデータを一度結合してから、
+必要な情報を正確に引き出すようなクエリを書く必要があります。
 
-1つのエンティティに関する情報を共有するテーブルには、
+１つのエンティティに関する情報を共有するテーブルには、
 データベース全体でそのエンティティを一意に識別する主キーが必要です。
-一般的な主キーの型は自動インクリメントの整数ですが（スペース効率がよいからです）、
+なお、一般的な主キーの型は（メモリ効率がよいので）自動インクリメントの整数ですが、
 一意であれば文字列やハッシュ値でもかまいません。
 
-クエリの`JOIN`句を使うと、
-この一意なキーを使って2つの別々のテーブルの行データを結合することができます。
+クエリの `JOIN` 句を使うと、
+この一意なキーを使って２つの別々のテーブルの行データを結合することができます。
 最初に紹介する結合は `INNER JOIN` です。
 
-複数のテーブルで`INNER JOIN`を使用した `SELECT` クエリ:
+`INNER JOIN` でのテーブル結合処理を含む `SELECT` クエリ:
 
 ```SQL
   SELECT column, another_table_column, ...
@@ -109,22 +110,26 @@
   LIMIT num_limit OFFSET num_offset;
 ```
 
-`INNER JOIN`は、
-(`ON`制約で定義された)同じキーを持つ最初のテーブルと2番目のテーブルの行をマッチさせ、
-両方のテーブルのカラムを結合した結果行を作成する処理です。
+`INNER JOIN` は、
+(`ON` 条件で定義された)同じキーを持つ最初のテーブルと２番目のテーブルの行をマッチさせ、
+両方のテーブルのカラムを結合した結果の行集合を作成する処理です。
 テーブルが結合された後、以前に学んだ他の句が適用されます。
 
 >**Did you know?**  
-`INNER JOIN`が単に`JOIN`と書かれているクエリを見かけることがあります。
+`INNER JOIN` が単に `JOIN` と書かれているクエリを見かけることがあります。
 この2つは同じ意味ですが、次のレッスンで紹介する他のタイプの結合を使い始めると、
 クエリが読みやすくなるので、このような結合は内部結合と呼ぶことにします。
 
 ## 練習問題
 
-Pixarデータベースに新しいテーブルを追加しました。
-このテーブルの_Movie_id_カラムは、
-**Movies**テーブルの_Id_カラムと1対1で対応します。
+ピクサーのデータベースに新しいテーブルを追加しました。
+このテーブルの _Movie_id_ カラムは、
+**Movies** テーブルの_Id_カラムと1対1で対応します。
 上で紹介した `INNER JOIN` を使って、以下のタスクを解いてみてください。
+
+>追記１  
+テーブル名は最初が **movies**、２つ目が **boxoffice** です。
+なお、"box office" は映画の文脈で「興行収入」の意味です。
 
 | id  | title               | director       | year | length_minutes |
 | --- | ------------------- | -------------- | ---- | -------------- |
@@ -167,28 +172,80 @@ Pixarデータベースに新しいテーブルを追加しました。
 <details>
   <summary>解答の期待値</summary>
 
-  1. 
-  2. 
-  3. 
+  1. Find the domestic and international sales for each movie
   ```psql
+            title        | domestic_sales | international_sales
+    ---------------------+----------------+---------------------
+     Finding Nemo        |      380843261 |           555900000
+     Monsters University |      268492764 |           475066843
+     Ratatouille         |      206445654 |           417277164
+     Cars 2              |      191452396 |           368400000
+     Toy Story 2         |      245852179 |           239163000
+     The Incredibles     |      261441092 |           370001000
+     WALL-E              |      223808164 |           297503696
+     Toy Story 3         |      415004880 |           648167031
+     Toy Story           |      191796233 |           170162503
+     Cars                |      244082982 |           217900167
+     Up                  |      293004164 |           438338580
+     Monsters, Inc.      |      289916256 |           272900000
+     A Bug's Life        |      162798565 |           200600000
+     Brave               |      237283207 |           301700000
   ```
+  2. Show the sales numbers for each movie that did better internationally rather than domestically
   ```psql
+            title        | domestic_sales | international_sales
+    ---------------------+----------------+---------------------
+     Finding Nemo        |      380843261 |           555900000
+     Monsters University |      268492764 |           475066843
+     Ratatouille         |      206445654 |           417277164
+     Cars 2              |      191452396 |           368400000
+     The Incredibles     |      261441092 |           370001000
+     WALL-E              |      223808164 |           297503696
+     Toy Story 3         |      415004880 |           648167031
+     Up                  |      293004164 |           438338580
+     A Bug's Life        |      162798565 |           200600000
+     Brave               |      237283207 |           301700000
   ```
+  3. List all the movies by their ratings in descending order
   ```psql
+            title        | rating
+    ---------------------+--------
+     WALL-E              |    8.5
+     Toy Story 3         |    8.4
+     Up                  |    8.3
+     Toy Story           |    8.3
+     Finding Nemo        |    8.2
+     Monsters, Inc.      |    8.1
+     The Incredibles     |    8.0
+     Ratatouille         |    8.0
+     Toy Story 2         |    7.9
+     Monsters University |    7.4
+     Brave               |    7.2
+     Cars                |    7.2
+     A Bug's Life        |    7.2
+     Cars 2              |    6.4
   ```
 </details>
 
 <details>
   <summary>解答例</summary>
 
-  1. 
-  2. 
-  3. 
+  1. Find the domestic and international sales for each movie
   ```psql
+    SELECT title, domestic_sales, international_sales
+    FROM movies INNER JOIN boxoffice ON movies.id = boxoffice.movie_id;
   ```
+  2. Show the sales numbers for each movie that did better internationally rather than domestically
   ```psql
+    SELECT title, domestic_sales, international_sales
+    FROM movies INNER JOIN boxoffice ON movies.id = boxoffice.movie_id
+    WHERE international_sales > domestic_sales;
   ```
+  3. List all the movies by their ratings in descending order
   ```psql
+    SELECT title, rating
+    FROM movies INNER JOIN boxoffice ON movies.id = boxoffice.movie_id
+    ORDER BY rating DESC;
   ```
 </details>
 
