@@ -4,47 +4,46 @@
   <summary>課題の表を再現するseedコマンド:</summary>
 
   ```SQL
-  DROP TABLE IF EXISTS buildings
+    DROP TABLE IF EXISTS employees;
+    DROP TABLE IF EXISTS buildings;
 
-  CREATE TABLE buildings (
-    building_name VARCHAR(10) PRIMARY KEY,
-    capacity      INTEGER     NOT NULL
-  );
+    CREATE TABLE buildings (
+      building_name VARCHAR(10) PRIMARY KEY,
+      capacity      INTEGER     NOT NULL
+    );
 
-  INSERT INTO buildings (building_name, capacity)
-  VALUES
-  ('1e', 24),
-  ('1w', 32),
-  ('2e', 16),
-  ('2w', 20);
+    INSERT INTO buildings (building_name, capacity)
+    VALUES
+    ('1e', 24),
+    ('1w', 32),
+    ('2e', 16),
+    ('2w', 20);
 
-  DROP TABLE IF EXISTS employees
+    CREATE TABLE employees (
+      role           VARCHAR(50)  NOT NULL,
+      name           VARCHAR(100) NOT NULL,
+      building       VARCHAR(10)  NOT NULL,
+      years_employed INTEGER      NOT NULL,
+      CONSTRAINT fk_building
+        FOREIGN KEY (building)
+        REFERENCES  buildings(building_name)
+    );
 
-  CREATE TABLE employees (
-    role           VARCHAR(50)  NOT NULL,
-    name           VARCHAR(100) NOT NULL,
-    building       VARCHAR(10)  NOT NULL,
-    years_employed INTEGER      NOT NULL,
-    CONSTRAINT fk_building
-      FOREIGN KEY (building)
-      REFERENCES  buildings(building_name)
-  );
-
-  INSERT INTO employees (role, name, building, years_employed)
-  VALUES
-  ('Engineer', 'Becky A.',   '1e', 4),
-  ('Engineer', 'Dan B.',     '1e', 2),
-  ('Engineer', 'Sharon F.',  '1e', 6),
-  ('Engineer', 'Dan M.',     '1e', 4),
-  ('Engineer', 'Malcom S.',  '1e', 1),
-  ('Artist',   'Tylar S.',   '2w', 2),
-  ('Artist',   'Sherman D.', '2w', 8),
-  ('Artist',   'Jakob J.',   '2w', 6),
-  ('Artist',   'Lillia A.',  '2w', 7),
-  ('Artist',   'Brandon J.', '2w', 7),
-  ('Manager',  'Scott K.',   '1e', 9),
-  ('Manager',  'Shirlee M.', '1e', 3),
-  ('Manager',  'Daria O.',   '2w', 6);
+    INSERT INTO employees (role, name, building, years_employed)
+    VALUES
+    ('Engineer', 'Becky A.',   '1e', 4),
+    ('Engineer', 'Dan B.',     '1e', 2),
+    ('Engineer', 'Sharon F.',  '1e', 6),
+    ('Engineer', 'Dan M.',     '1e', 4),
+    ('Engineer', 'Malcom S.',  '1e', 1),
+    ('Artist',   'Tylar S.',   '2w', 2),
+    ('Artist',   'Sherman D.', '2w', 8),
+    ('Artist',   'Jakob J.',   '2w', 6),
+    ('Artist',   'Lillia A.',  '2w', 7),
+    ('Artist',   'Brandon J.', '2w', 7),
+    ('Manager',  'Scott K.',   '1e', 9),
+    ('Manager',  'Shirlee M.', '1e', 3),
+    ('Manager',  'Daria O.',   '2w', 6);
   ```
 
   または以下を実行:
@@ -59,12 +58,12 @@
 データをどのように分析したいかによって、
 前回のレッスンで使用した `INNER JOIN` では不十分な場合があります。
 
-2つのテーブルが非対称なデータを持っている場合、
+２つのテーブルが非対称なデータを持っている場合、
 これはデータが異なる段階で入力された場合に起こりやすいので、
 必要なデータが結果から取り残されないようにするためには、
-代わりに`LEFT JOIN`、`RIGHT JOIN`、`FULL JOIN`を使用する必要があります。
+代わりに `LEFT JOIN`,`RIGHT JOIN`,`FULL JOIN` を使用する必要があります。
 
-複数のテーブルに LEFT/RIGHT/FULL JOIN を使用した `SELECT` クエリ:
+`LEFT/RIGHT/FULL JOIN` を使用する `SELECT` クエリ:
 
 ```SQL
   SELECT column, another_column, ...
@@ -75,15 +74,36 @@
   LIMIT num_limit OFFSET num_offset;
 ```
 
-`INNER JOIN`と同様に、これら3つの新しい`JOIN`クエリでも、
-どのカラムでデータを結合するかを指定しなければなりません。
-テーブルAとテーブルBを結合する場合を考えてそれぞれのクエリを解説します。
-まず、`LEFT JOIN` は、Bにマッチする行が無くても、NULLで補完してAの行は保持します。
-次に、`RIGHT JOIN`も似ていますが、逆にAにマッチする行がない場合に、Bの行を保持します。
-最後に、`FULL JOIN`は、A, Bの全ての行を保存して結合します。
+使い方は `INNER JOIN` と同様で、
+どのカラムでデータを結合するかを指定します。
+それぞれの違いを、「`{ 1, 2, 3 }` というキーを持つテーブル *A* 」と、
+「`{ 2, 3, 4 }` というキーを持つテーブル *B* 」を結合する場合で考えます。
+- `LEFT JOIN`:  *B* にマッチする行がない場合、`NULL`で補完して *A* の行を保存。  
+  -> `{ 1, 2, 3 }` のキーからなるテーブルが合成される。  
+  キー `1` の他のカラムの値には `NULL` が入り、*B* のキー `4` のデータは棄却される。
+- `RIGHT JOIN`: *A* にマッチする行がない場合、`NULL`で補完して *B* の行を保存。  
+  -> `{ 2, 3, 4 }` のキーからなるテーブルが合成される。  
+  キー `4` の他のカラムの値には `NULL` が入り、*A* のキー `1` のデータは棄却される。
+- `FULL JOIN`:  *A*, *B* のすべての行を保存して結合。  
+  -> `{ 1, 2, 3, 4 }` のキーからなるテーブルが合成される。  
+  キー `1`, `4` の他のカラムの値には `NULL` が入る。
+- `INNER JOIN`:  *A*, *B* の両方に含まれるの行のみで結合。  
+  -> `{ 2, 3 }` のキーからなるテーブルが合成される。  
+  キー `1`, `4` のデータは棄却される。
 
-これらの新しい`JOIN`クエリを使用する場合、
-結果と制約の`NULL`を処理するために追加のロジックを書く必要があるでしょう（これについては次のレッスンで詳しく説明します）。
+特に今回紹介した `LEFT/RIGHT/FULL JOIN` クエリを使用する場合、
+`NULL` が混入し得ることに注意してください。
+集計などの処理するためには `NULL` の扱いを決定する追加のロジックを書く必要があるでしょう
+（これについては次のレッスンで詳しく説明します）。
+
+>追記１  
+原理的に `RIGHT JOIN` と、`LEFT JOIN` はテーブル部分の記述順を交換すると相互に変換できる。
+よって、片方だけですべてのクエリを表現できるが、
+複雑な場合には織り交ぜるとクエリがすっきりするケースもあるので両方存在していると思われるが、
+逆に混ぜるとわかりづらい意見もあり `LEFT JOIN` だけ使用する実務的なルールが設けられたりもする。
+
+>追記２  
+MySQL, SQLite では `FULL JOIN` は未対応なので、`LEFT JOIN` や `UNION` などを駆使して実装する。
 
 >**Did you know?**  
 これらのクエリはそれぞれ、
@@ -94,10 +114,13 @@
 
 ## 練習問題
 
-この演習では、映画スタジオの**Employees**と割り当てられたオフィスの**Buildings**に関する架空のデータを格納する新しいテーブルを扱います。
-いくつかのビルは新しいので、まだ従業員はいませんが、それらに関係なく、いくつかの情報を見つける必要があります。
+この演習では、映画スタジオの **Employees** と
+割り当てられたオフィスの **Buildings** に関する
+架空のデータを格納する新しいテーブルを扱います。
+いくつかのビルは新しいので、まだ従業員はいませんが、
+それらに関係なく、いくつかの情報を見つける必要があります。
 
-私たちのブラウザSQLデータベースはやや限られているので、以下の演習では`LEFT JOIN`だけがサポートされています。
+なお、以下の演習では `LEFT JOIN` だけがサポートされています。
 
 | building_name | capacity |
 | ------------- | -------- |
@@ -129,28 +152,50 @@
 <details>
   <summary>解答の期待値</summary>
 
-  1. 
-  2. 
-  3. 
+  1. Find the list of all buildings that have employees
   ```psql
+     building_name 
+    ---------------
+     1e
+     2w
   ```
+  2. Find the list of all buildings and their capacity
   ```psql
+     building_name | capacity 
+    ---------------+----------
+     1e            |       24
+     1w            |       32
+     2e            |       16
+     2w            |       20
   ```
+  3. List all buildings and the distinct employee roles in each building (including empty buildings)
   ```psql
+     building_name |   role   
+    ---------------+----------
+     1e            | Engineer
+     2e            | 
+     1w            | 
+     2w            | Artist
+     1e            | Manager
+     2w            | Manager
   ```
 </details>
 
 <details>
   <summary>解答例</summary>
 
-  1. 
-  2. 
-  3. 
-  ```psql
+  1. Find the list of all buildings that have employees
+  ```sql
+    SELECT DISTINCT building AS building_name FROM employees;
   ```
-  ```psql
+  2. Find the list of all buildings and their capacity
+  ```sql
+    SELECT * FROM buildings;
   ```
-  ```psql
+  3. List all buildings and the distinct employee roles in each building (including empty buildings)
+  ```sql
+    SELECT DISTINCT building_name, role FROM buildings
+    LEFT JOIN employees ON buildings.building_name = employees.building;
   ```
 </details>
 
