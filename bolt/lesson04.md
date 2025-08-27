@@ -80,7 +80,7 @@ Movies テーブルを例にとると、同じ監督による作品は複数存�
 
 `ORDER BY` 句が指定されると、
 各行は指定されたカラムの値に基づいて（文字列ならば）アルファベット順にソートされます。
-DBMSによっては、
+DBMS によっては、
 言語ごとに照合順序が用意されており、
 適切な言語を指定することもできます。
 
@@ -199,19 +199,19 @@ Reddit や Pinterest のようなウェブサイトを考えてみると、
   <summary>解答例</summary>
 
   1. List all directors of Pixar movies (alphabetically), without duplicates
-  ```psql
+  ```sql
     SELECT DISTINCT director FROM movies ORDER BY director;
   ```
   2. List the last four Pixar movies released (ordered from most recent to least)
-  ```psql
+  ```sql
     SELECT * FROM movies ORDER BY year DESC LIMIT 4;
   ```
   3. List the first five Pixar movies sorted alphabetically
-  ```psql
+  ```sql
     SELECT * FROM movies ORDER BY title ASC LIMIT 5;
   ```
   4. List the next five Pixar movies sorted alphabetically
-  ```psql
+  ```sql
     SELECT * FROM movies ORDER BY title ASC LIMIT 5 OFFSET 5;
   ```
 </details>

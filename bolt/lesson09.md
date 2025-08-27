@@ -4,59 +4,60 @@
   <summary>課題の表を再現するseedコマンド:</summary>
 
   ```SQL
-  DROP TABLE IF EXISTS movies;
+    DROP TABLE IF EXISTS movies;
+    DROP TABLE IF EXISTS boxoffice;
 
-  CREATE TABLE IF NOT EXISTS movies (
-    id              INTEGER         PRIMARY KEY,
-    title           VARCHAR(255)    NOT NULL,
-    director        VARCHAR(255)    NOT NULL,
-    year            INTEGER         NOT NULL,
-    length_minutes  INTEGER         NOT NULL
-  );
+    CREATE TABLE IF NOT EXISTS movies (
+      id              INTEGER         PRIMARY KEY,
+      title           VARCHAR(255)    NOT NULL,
+      director        VARCHAR(255)    NOT NULL,
+      year            INTEGER         NOT NULL,
+      length_minutes  INTEGER         NOT NULL
+    );
 
-  INSERT INTO movies (id, title, director, year, length_minutes)
-  VALUES
-  (1,  'Toy Story',           'John Lasseter',  1995, 81),
-  (2,  'A Bug''s Life',       'John Lasseter',  1998, 95),
-  (3,  'Toy Story 2',         'John Lasseter',  1999, 93),
-  (4,  'Monsters, Inc.',      'Pete Docter',    2001, 92),
-  (5,  'Finding Nemo',        'Andrew Stanton', 2003, 107),
-  (6,  'The Incredibles',     'Brad Bird',      2004, 116),
-  (7,  'Cars',                'John Lasseter',  2006, 117),
-  (8,  'Ratatouille',         'Brad Bird',      2007, 115),
-  (9,  'WALL-E',              'Andrew Stanton', 2008, 104),
-  (10, 'Up',                  'Pete Docter',    2009, 101),
-  (11, 'Toy Story 3',         'Lee Unkrich',    2010, 103),
-  (12, 'Cars 2',              'John Lasseter',  2011, 120),
-  (13, 'Brave',               'Brenda Chapman', 2012, 102),
-  (14, 'Monsters University', 'Dan Scanlon',    2013, 110);
+    INSERT INTO movies (id, title, director, year, length_minutes)
+    VALUES
+    (1,  'Toy Story',           'John Lasseter',  1995, 81),
+    (2,  'A Bug''s Life',       'John Lasseter',  1998, 95),
+    (3,  'Toy Story 2',         'John Lasseter',  1999, 93),
+    (4,  'Monsters, Inc.',      'Pete Docter',    2001, 92),
+    (5,  'Finding Nemo',        'Andrew Stanton', 2003, 107),
+    (6,  'The Incredibles',     'Brad Bird',      2004, 116),
+    (7,  'Cars',                'John Lasseter',  2006, 117),
+    (8,  'Ratatouille',         'Brad Bird',      2007, 115),
+    (9,  'WALL-E',              'Andrew Stanton', 2008, 104),
+    (10, 'Up',                  'Pete Docter',    2009, 101),
+    (11, 'Toy Story 3',         'Lee Unkrich',    2010, 103),
+    (12, 'Cars 2',              'John Lasseter',  2011, 120),
+    (13, 'Brave',               'Brenda Chapman', 2012, 102),
+    (14, 'Monsters University', 'Dan Scanlon',    2013, 110);
 
-  CREATE TABLE boxoffice (
-    movie_id            INTEGER      PRIMARY KEY,
-    rating              NUMERIC(3,1) NOT NULL,
-    domestic_sales      INTEGER      NOT NULL,
-    international_sales INTEGER      NOT NULL,
-    CONSTRAINT fk_movie
-      FOREIGN KEY (movie_id)
-      REFERENCES movies(id)
-  );
+    CREATE TABLE boxoffice (
+      movie_id            INTEGER      PRIMARY KEY,
+      rating              NUMERIC(3,1) NOT NULL,
+      domestic_sales      INTEGER      NOT NULL,
+      international_sales INTEGER      NOT NULL,
+      CONSTRAINT fk_movie
+        FOREIGN KEY (movie_id)
+        REFERENCES movies(id)
+    );
 
-  INSERT INTO boxoffice (movie_id, rating, domestic_sales, international_sales)
-  VALUES
-  (5,  8.2, 380843261, 555900000),
-  (14, 7.4, 268492764, 475066843),
-  (8,  8.0, 206445654, 417277164),
-  (12, 6.4, 191452396, 368400000),
-  (3,  7.9, 245852179, 239163000),
-  (6,  8.0, 261441092, 370001000),
-  (9,  8.5, 223808164, 297503696),
-  (11, 8.4, 415004880, 648167031),
-  (1,  8.3, 191796233, 170162503),
-  (7,  7.2, 244082982, 217900167),
-  (10, 8.3, 293004164, 438338580),
-  (4,  8.1, 289916256, 272900000),
-  (2,  7.2, 162798565, 200600000),
-  (13, 7.2, 237283207, 301700000);
+    INSERT INTO boxoffice (movie_id, rating, domestic_sales, international_sales)
+    VALUES
+    (5,  8.2, 380843261, 555900000),
+    (14, 7.4, 268492764, 475066843),
+    (8,  8.0, 206445654, 417277164),
+    (12, 6.4, 191452396, 368400000),
+    (3,  7.9, 245852179, 239163000),
+    (6,  8.0, 261441092, 370001000),
+    (9,  8.5, 223808164, 297503696),
+    (11, 8.4, 415004880, 648167031),
+    (1,  8.3, 191796233, 170162503),
+    (7,  7.2, 244082982, 217900167),
+    (10, 8.3, 293004164, 438338580),
+    (4,  8.1, 289916256, 272900000),
+    (2,  7.2, 162798565, 200600000),
+    (13, 7.2, 237283207, 301700000);
   ```
 
   または以下を実行:
@@ -68,8 +69,7 @@
 
 ## 訳文
 
-SQLによる生のカラム・データの照会と参照に加えて、_expression_を使用して、
-クエリ内のカラム値に対してより複雑なロジックを記述することもできます。
+取得するデータにその場で処理を施して、加工する表現も用意されています。
 これらの式は、基本的な算術演算とともに数学関数や文字列関数を使用し、
 クエリの実行時に値を変換することができます。
 
@@ -161,28 +161,71 @@ SQLによる生のカラム・データの照会と参照に加えて、_express
 <details>
   <summary>解答の期待値</summary>
 
-  1. 
-  2. 
-  3. 
+  1. List all movies and their combined sales in millions of dollars
   ```psql
+            title        | domestic_sales | international_sales | combined_sales 
+    ---------------------+----------------+---------------------+----------------
+     Finding Nemo        |      380843261 |           555900000 |      936743261
+     Monsters University |      268492764 |           475066843 |      743559607
+     Ratatouille         |      206445654 |           417277164 |      623722818
+     Cars 2              |      191452396 |           368400000 |      559852396
+     Toy Story 2         |      245852179 |           239163000 |      485015179
+     The Incredibles     |      261441092 |           370001000 |      631442092
+     WALL-E              |      223808164 |           297503696 |      521311860
+     Toy Story 3         |      415004880 |           648167031 |     1063171911
+     Toy Story           |      191796233 |           170162503 |      361958736
+     Cars                |      244082982 |           217900167 |      461983149
+     Up                  |      293004164 |           438338580 |      731342744
+     Monsters, Inc.      |      289916256 |           272900000 |      562816256
+     A Bug's Life        |      162798565 |           200600000 |      363398565
+     Brave               |      237283207 |           301700000 |      538983207
   ```
+  2. List all movies and their ratings in percent
   ```psql
+            title        | rating (%) 
+    ---------------------+------------
+     Finding Nemo        |       82.0
+     Monsters University |       74.0
+     Ratatouille         |       80.0
+     Cars 2              |       64.0
+     Toy Story 2         |       79.0
+     The Incredibles     |       80.0
+     WALL-E              |       85.0
+     Toy Story 3         |       84.0
+     Toy Story           |       83.0
+     Cars                |       72.0
+     Up                  |       83.0
+     Monsters, Inc.      |       81.0
+     A Bug's Life        |       72.0
+     Brave               |       72.0
   ```
+  3. List all movies that were released on even number years
   ```psql
+          title      | year 
+    -----------------+------
+     A Bug's Life    | 1998
+     The Incredibles | 2004
+     Cars            | 2006
+     WALL-E          | 2008
+     Toy Story 3     | 2010
+     Brave           | 2012
   ```
 </details>
 
 <details>
   <summary>解答例</summary>
 
-  1. 
-  2. 
-  3. 
-  ```psql
+  1. List all movies and their combined sales in millions of dollars
+  ```sql
+    SELECT title, domestic_sales + international_sales AS combined_sales FROM movies AS m INNER JOIN boxoffice AS b ON m.id = b.movie_id;
   ```
-  ```psql
+  2. List all movies and their ratings in percent
+  ```sql
+    SELECT title, rating * 10 AS "rating (%)" FROM movies AS m INNER JOIN boxoffice AS b ON m.id = b.movie_id;
   ```
-  ```psql
+  3. List all movies that were released on even number years
+  ```sql
+    SELECT title, year FROM movies WHERE year % 2 = 0;
   ```
 </details>
 

@@ -2,11 +2,12 @@
 
 -- Run following to apply:
 -- * From psql interactive shell
---    \i /home/postgres/datasetsqlbolt/movies-boxoffice.sql
+--    \i /home/postgres/dataset/sqlbolt/movies-boxoffice.sql
 -- * From bash shell
 --    psql -U postgres -f ~/dataset/sqlbolt/movies-boxoffice.sql
 
 DROP TABLE IF EXISTS movies;
+DROP TABLE IF EXISTS boxoffice;
 
 CREATE TABLE IF NOT EXISTS movies (
   id              INTEGER         PRIMARY KEY,

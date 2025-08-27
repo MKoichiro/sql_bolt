@@ -41,15 +41,15 @@
 
 ## 訳文
 
-SQLデータベースからデータを取り出すには、`SELECT`文を使います。
-①どのようなデータを探しているのか、
-②データベースのどこにあるのか、
+SQL データベースからデータを取り出すには、`SELECT` 文を使います。
+① どのようなデータを探しているのか、
+② データベースのどこにあるのか、
 またオプションとして、
-③データを返す前にどのように変換するのか、
+③ データを返す前にどのように変換するのか、
 クエリ自体はこれらを宣言しているに過ぎません。
 しかし、クエリには特有の構文があるので、それらを以下のレッスンで学んで行きます。
 
-イントロダクションで述べたように、SQLのテーブル＝エンティティ（例：犬）、
+イントロダクションで述べたように、SQL のテーブル＝エンティティ（例：犬）、
 テーブルの各行＝特定のインスタンス（例：パグ、ビーグル、色違いのパグなど）
 と考えることができます。
 よっておのずと列は、そのエンティティのすべてのインスタンスに共通するプロパティ（毛の色、尻尾の長さなど）を表すことになります。
@@ -57,7 +57,7 @@ SQLデータベースからデータを取り出すには、`SELECT`文を使い
 そして、データのテーブルが与えられた場合、最も基本的なクエリは、
 テーブルの**すべての行（インスタンス）から、いくつかの列（プロパティ）を選択する**ものです。
 
-特定のカラムを選択するクエリ:
+特定のカラムを指定する `SELECT` クエリ:
 
 ```SQL
   SELECT column, another_column, ... FROM mytable;
@@ -81,7 +81,7 @@ SQLデータベースからデータを取り出すには、`SELECT`文を使い
 ## 練習問題
 
 この演習では、ピクサーの名作映画に関するデータを含むデータベースを使用します。
-この最初の演習では、**Movies**テーブルのみを使用し、
+この最初の演習では、**movies** テーブルのみを使用し、
 以下のデフォルトクエリは現在、各映画のすべてのプロパティを表示します。
 次のレッスンに進むには、クエリを変更して、各タスクに必要な情報を探します。
 
@@ -212,23 +212,23 @@ SQLデータベースからデータを取り出すには、`SELECT`文を使い
   <summary>解答例</summary>
 
   1. Find the title of each film
-  ```psql
+  ```sql
     SELECT title FROM movies;
   ```
   2. Find the director of each film
-  ```psql
+  ```sql
     SELECT director FROM movies;
   ```
   3. Find the title and director of each film
-  ```psql
+  ```sql
     SELECT title, director FROM movies;
   ```
   4. Find the title and year of each film
-  ```psql
+  ```sql
     SELECT title, year FROM movies;
   ```
   5. Find all the information about each film
-  ```psql
+  ```sql
     SELECT * FROM movies;
   ```
 </details>

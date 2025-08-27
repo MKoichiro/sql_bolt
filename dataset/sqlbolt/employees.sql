@@ -2,7 +2,7 @@
 
 -- Run following to apply:
 -- * From psql interactive shell
---    \i /home/postgres/datasetsqlbolt/employees.sql
+--    \i /home/postgres/dataset/sqlbolt/employees.sql
 -- * From bash shell
 --    psql -U postgres -f ~/dataset/sqlbolt/employees.sql
 
@@ -12,10 +12,7 @@ CREATE TABLE employees (
   role           VARCHAR(50)  NOT NULL,
   name           VARCHAR(100) NOT NULL,
   building       VARCHAR(10)  NOT NULL,
-  years_employed INTEGER      NOT NULL,
-  CONSTRAINT fk_building
-    FOREIGN KEY (building)
-    REFERENCES  buildings(building_name)
+  years_employed INTEGER      NOT NULL
 );
 
 INSERT INTO employees (role, name, building, years_employed)

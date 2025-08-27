@@ -2,9 +2,9 @@
 
 -- Run following to apply:
 -- * From psql interactive shell
---    \i /home/postgres/dataset/sqlbolt/buildings-employees.sql
+--    \i /home/postgres/dataset/sqlbolt/incomplete-buildings-employees.sql
 -- * From bash shell
---    psql -U postgres -f ~/dataset/sqlbolt/buildings-employees.sql
+--    psql -U postgres -f ~/dataset/sqlbolt/incomplete-buildings-employees.sql
 
 DROP TABLE IF EXISTS employees;
 DROP TABLE IF EXISTS buildings;
@@ -24,7 +24,7 @@ VALUES
 CREATE TABLE employees (
   role           VARCHAR(50)  NOT NULL,
   name           VARCHAR(100) NOT NULL,
-  building       VARCHAR(10)  NOT NULL,
+  building       VARCHAR(10),
   years_employed INTEGER      NOT NULL,
   CONSTRAINT fk_building
     FOREIGN KEY (building)
@@ -45,4 +45,6 @@ VALUES
 ('Artist',   'Brandon J.', '2w', 7),
 ('Manager',  'Scott K.',   '1e', 9),
 ('Manager',  'Shirlee M.', '1e', 3),
-('Manager',  'Daria O.',   '2w', 6);
+('Manager',  'Daria O.',   '2w', 6),
+('Engineer', 'Yancy I.',   NULL, 0),
+('Artist',    'Oliver P.', NULL, 0);

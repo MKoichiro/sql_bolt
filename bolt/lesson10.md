@@ -4,33 +4,30 @@
   <summary>課題の表を再現するseedコマンド:</summary>
 
   ```SQL
-  DROP TABLE IF EXISTS employees
+    DROP TABLE IF EXISTS employees;
 
-  CREATE TABLE employees (
-    role           VARCHAR(50)  NOT NULL,
-    name           VARCHAR(100) NOT NULL,
-    building       VARCHAR(10)  NOT NULL,
-    years_employed INTEGER      NOT NULL,
-    CONSTRAINT fk_building
-      FOREIGN KEY (building)
-      REFERENCES  buildings(building_name)
-  );
+    CREATE TABLE employees (
+      role           VARCHAR(50)  NOT NULL,
+      name           VARCHAR(100) NOT NULL,
+      building       VARCHAR(10)  NOT NULL,
+      years_employed INTEGER      NOT NULL
+    );
 
-  INSERT INTO employees (role, name, building, years_employed)
-  VALUES
-  ('Engineer', 'Becky A.',   '1e', 4),
-  ('Engineer', 'Dan B.',     '1e', 2),
-  ('Engineer', 'Sharon F.',  '1e', 6),
-  ('Engineer', 'Dan M.',     '1e', 4),
-  ('Engineer', 'Malcom S.',  '1e', 1),
-  ('Artist',   'Tylar S.',   '2w', 2),
-  ('Artist',   'Sherman D.', '2w', 8),
-  ('Artist',   'Jakob J.',   '2w', 6),
-  ('Artist',   'Lillia A.',  '2w', 7),
-  ('Artist',   'Brandon J.', '2w', 7),
-  ('Manager',  'Scott K.',   '1e', 9),
-  ('Manager',  'Shirlee M.', '1e', 3),
-  ('Manager',  'Daria O.',   '2w', 6);
+    INSERT INTO employees (role, name, building, years_employed)
+    VALUES
+    ('Engineer', 'Becky A.',   '1e', 4),
+    ('Engineer', 'Dan B.',     '1e', 2),
+    ('Engineer', 'Sharon F.',  '1e', 6),
+    ('Engineer', 'Dan M.',     '1e', 4),
+    ('Engineer', 'Malcom S.',  '1e', 1),
+    ('Artist',   'Tylar S.',   '2w', 2),
+    ('Artist',   'Sherman D.', '2w', 8),
+    ('Artist',   'Jakob J.',   '2w', 6),
+    ('Artist',   'Lillia A.',  '2w', 7),
+    ('Artist',   'Brandon J.', '2w', 7),
+    ('Manager',  'Scott K.',   '1e', 9),
+    ('Manager',  'Shirlee M.', '1e', 3),
+    ('Manager',  'Daria O.',   '2w', 6);
   ```
 
   または以下を実行:
@@ -42,15 +39,15 @@
 
 ## 訳文
 
-前回のレッスンで紹介した単純な式だけでなく、
-SQLではデータ行のグループに関する情報を要約できる集計式（または関数）の使用もサポートしています。
-これまで使用してきたPixarデータベースを使用すると、
+前回のレッスンで紹介した算術演算子による単純な式だけでなく、
+データ行のグループに関する情報を要約できる集計式（または関数）の使用もサポートしています。
+これまで使用してきたピクサーのデータベースを使用すると、
 集計関数を使用して
-「Pixarは何本の映画を制作したのか」、
-「毎年最も興行収入の高いPixar映画は何か」
+「ピクサーは合計で何本の映画を制作したのか」、
+「毎年最も興行収入の高いピクサー映画は何か」
 といった質問に答えることができます。
 
-全行に対する集計関数を使用したSelectクエリ:
+全行に対する集計関数を使用した `SELECT` クエリ:
 
 ```SQL
   SELECT AGG_FUNC(column_or_expression) AS aggregate_description, ...
@@ -58,9 +55,10 @@ SQLではデータ行のグループに関する情報を要約できる集計�
   WHERE constraint_expression;
 ```
 
-グループ化を指定しないと、
-各集計関数は結果行のセット全体に対して実行され、単一の値を返します。
-そして、通常の式と同様に、集計関数に別名を与えることで、
+グループ化を指定しない場合、
+各集計関数は必ず、結果行のセット全体に対して実行され、
+単一の値を返すことになります。
+そして、通常の式と同様に、集計関数にエイリアスを与えることで、
 結果を読みやすく、処理しやすくすることができます。
 
 ## 一般的な集計関数
@@ -86,9 +84,9 @@ SQLではデータ行のグループに関する情報を要約できる集計�
 すべての行を集計するだけでなく、グループ内の個々のデータグループ
 （例えば、コメディー映画の興行収入とアクション映画の興行収入）
 に集計関数を適用することもできます。
-これは、`GROUP BY`句で定義されたユニークなグループの数だけ結果を作成します。
+これは、`GROUP BY` 句で定義されたユニークなグループの数だけ結果を作成します。
 
-グループに対する集計関数を使用したSelectクエリ:
+`GROUP BY` と集計関数を併用する `SELECT` クエリ:
 
 ```SQL
   SELECT AGG_FUNC(column_or_expression) AS aggregate_description, ...
@@ -97,7 +95,8 @@ SQLではデータ行のグループに関する情報を要約できる集計�
   GROUP BY column;
 ```
 
-`GROUP BY`句は、指定されたカラムに同じ値を持つ行をグループ化することで機能します。
+`GROUP BY` 句は、指定されたカラムに同じ値を持つ行をグループ化します。
+このとき集計関数は、グループ単位で適用され、グループの数だけの結果を返してくれます。
 
 ## 練習問題
 
@@ -129,28 +128,43 @@ SQLではデータ行のグループに関する情報を要約できる集計�
 <details>
   <summary>解答の期待値</summary>
 
-  1. 
-  2. 
-  3. 
+  1. Find the longest time that an employee has been at the studio
   ```psql
+     longest_enrollment
+    --------------------
+                      9
   ```
+  2. For each role, find the average number of years employed by employees in that role
   ```psql
+       role   | avg_years_employed
+    ----------+--------------------
+     Engineer | 3.4000000000000000
+     Manager  | 6.0000000000000000
+     Artist   | 6.0000000000000000
   ```
+  3. Find the total number of employee years worked in each building
   ```psql
+     building | total_years_employed
+    ----------+----------------------
+     1e       |                   29
+     2w       |                   36
   ```
 </details>
 
 <details>
   <summary>解答例</summary>
 
-  1. 
-  2. 
-  3. 
-  ```psql
+  1. Find the longest time that an employee has been at the studio
+  ```sql
+    SELECT MAX(years_employed) AS longest_enrollment FROM employees;
   ```
-  ```psql
+  2. For each role, find the average number of years employed by employees in that role
+  ```sql
+    SELECT role, AVG(years_employed) AS avg_years_employed FROM employees GROUP BY role;
   ```
-  ```psql
+  3. Find the total number of employee years worked in each building
+  ```sql
+    SELECT building, SUM(years_employed) AS total_years_employed FROM employees GROUP BY building;
   ```
 </details>
 

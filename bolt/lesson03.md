@@ -73,11 +73,11 @@ SQL は大文字小文字を区別しない文字列比較や
 ID やコード、短い文字列の完全一致/前方一致であれば、`LIKE 'abc%'` などで十分です。
 
 >追記２  
-引用符のルールはRDBMS間で異なります。
+引用符のルールは RDBMS 間で異なります。
 ダブルクォートは方言によっては文字列に使用できません。
 文字列表現はシングルクォートの採用が多いので、基本的にシングルクォートを使うのがよいです。
 ダブルクォートやバッククォートはテーブル名やカラム名などの表現に割り当てられていることが多いです。
-例えばPostgreSQLでは、ダブルクォートはテーブル名やカラム名、シングルクォートが文字列、バッククォートは使用しない、というルールになっています。
+例えば PostgreSQL では、ダブルクォートはテーブル名やカラム名、シングルクォートが文字列、バッククォートは使用しない、というルールになっています。
 
 >追記３  
 詳細は省きますが、同様に互換性の観点から、不一致は`!=`より`<>`が推奨されます。
@@ -162,19 +162,19 @@ ID やコード、短い文字列の完全一致/前方一致であれば、`LIK
   <summary>解答例</summary>
 
   1. Find all the Toy Story movies
-  ```psql
+  ```sql
     SELECT * FROM movies WHERE title LIKE 'Toy Story%';
   ```
   2. Find all the movies directed by John Lasseter
-  ```psql
+  ```sql
     SELECT * FROM movies WHERE director = 'John Lasseter';
   ```
   3. Find all the movies (and director) not directed by John Lasseter
-  ```psql
+  ```sql
     SELECT title, director FROM movies WHERE director <> 'John Lasseter';
   ```
   4. Find all the WALL-* movies
-  ```psql
+  ```sql
     SELECT title FROM movies WHERE title LIKE 'WALL-%';
   ```
 </details>
